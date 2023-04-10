@@ -1,0 +1,26 @@
+{
+  "Books": [
+    {
+      "title": "Slaughterhouse-Five",
+      "author": "Kurt Vonnegut",
+      "release_year": "1969",
+      "book_cover": "https://covers.openlibrary.org/b/id/7890961-L.jpg",
+      "avg_rating": "4.17",
+      "description": "Slaughterhouse-Five is one of the world's great anti-war books. Centering on the infamous fire-bombing of Dresden, Billy Pilgrim's odyssey through time reflects the mythic journey of our own fractured lives as we search for meaning in what we are afraid to know.",
+      "hint_1": "The main character's name is Billy Pilgrim",
+      "hint_2": "It's a semi-autobiographic science fiction-infused anti-war novel",
+      "hint_3": "It was the author's first novel to become a bestseller, staying on the New York Times bestseller list for sixteen weeks and peaking at No. 4."
+    },
+    {
+      "title": "The End of Eternity",
+      "author": "Isaac Asimov",
+      "release_year": "1955",
+      "book_cover": "https://covers.openlibrary.org/b/id/12989101-L.jpg",
+      "avg_rating": "4.71",
+      "description": "The story of temporal engineers who meta-regulate the history of humanity through the centuries, eliminating risk, adventure, and space travel in the process. One man rebels in order to save the existence of someone he loves, and in the end the time bureaucracy is destroyed for the sake of individuality and human achievement. The theme is the opposite of the Foundation stories, where the central planners and manipulators of humanity always dominate.",
+      "hint_1": "The main character's name is Andrew Harlan",
+      "hint_2": "Its premise is that of a causal loop, a type of temporal paradox in which events and their causes form a loop.",
+      "hint_3": "The book was highly acclaimed by critics. The New York Times reviewer Villiers Gerson praised the novel by stating it 'has suspense on every page' and 'exhibits in every chapter the plot twists for which the author is famous.'"
+    }
+  ]
+}
