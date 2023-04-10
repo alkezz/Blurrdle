@@ -1,12 +1,12 @@
 {
   "Books": [
     {
-      "title": "Slaughterhouse-Five",
+      "title": "Slaughterhouse Five",
       "author": "Kurt Vonnegut",
       "release_year": "1969",
-      "book_cover": "https://covers.openlibrary.org/b/id/7890961-L.jpg",
+      "book_cover": "https://m.media-amazon.com/images/I/71QcX1DbklL.jpg",
       "avg_rating": "4.17",
-      "description": "Slaughterhouse-Five is one of the world's great anti-war books. Centering on the infamous fire-bombing of Dresden, Billy Pilgrim's odyssey through time reflects the mythic journey of our own fractured lives as we search for meaning in what we are afraid to know.",
+      "description": "One of the world's great anti-war books. Centering on the infamous fire-bombing of Dresden, Billy Pilgrim's odyssey through time reflects the mythic journey of our own fractured lives as we search for meaning in what we are afraid to know.",
       "hint_1": "The main character's name is Billy Pilgrim",
       "hint_2": "It's a semi-autobiographic science fiction-infused anti-war novel",
       "hint_3": "It was the author's first novel to become a bestseller, staying on the New York Times bestseller list for sixteen weeks and peaking at No. 4."
