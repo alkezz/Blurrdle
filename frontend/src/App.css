@@ -5,15 +5,19 @@
   align-items: center;
   margin-top: 50px;
 }
+body{
+  background-color: rgb(30, 32, 48);
+  color: white;
+}
 .full-page-container {
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 10px;
   width: 75%;
   height: 100%;
   margin-bottom: 100px;
 }
 a{
-  color: black;
+  color: white;
 }
 .blur{
   filter: blur(15px);
@@ -88,7 +92,7 @@ a{
   align-items: center;
 }
 .hint{
-  border: 1px solid black;
+  /* border: 1px solid white; */
   width: fit-content;
   border-radius: 10px;
   padding: 5px;
@@ -106,4 +110,19 @@ a{
     transform: translateY(0); /* Adjust the distance the number falls as needed */
     opacity: 1;
   }
+}
+
+.modal-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #1b1b1b;
+  width: 400px;
+  margin-left: 550px;
+  margin-top: 100px;
+  padding: 30px;
+  border-radius: 15px;
+}
+li{
+  list-style-type: disc;
 }
