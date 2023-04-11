@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import data from "./BookData/bookData.json"
 import InfoIcon from '@mui/icons-material/Info';
@@ -10,42 +10,44 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 
-function App() {
-  const [isCorrect, setIsCorrect] = useState(false)
-  const [userGuess, setUserGuess] = useState('')
-  const [lives, setLives] = useState(5)
-  const [screenShake, setScreenShake] = useState(false)
-  const [showHint, setShowHint] = useState(0)
-  const [open, setOpen] = useState(false);
-  const handleModal = () => open ? setOpen(false) : setOpen(true)
-  const handleWin = () => {
-    setIsCorrect(true)
+function App(): JSX.Element {
+  const [isCorrect, setIsCorrect] = useState<boolean>(false);
+  const [userGuess, setUserGuess] = useState<string>('');
+  const [lives, setLives] = useState<number>(5);
+  const [screenShake, setScreenShake] = useState<boolean>(false);
+  const [showHint, setShowHint] = useState<number>(0);
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleModal = (): void => open ? setOpen(false) : setOpen(true);
+  const handleWin = (): void => {
+    setIsCorrect(true);
   }
-  const handleLoss = () => {
+  const handleLoss = (): void => {
 
   }
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     if (userGuess.toLowerCase() === data.Books[0].title.toLowerCase()) {
       handleWin();
     } else {
-      setLives(lives - 1)
-      setShowHint(showHint + 1)
-      setScreenShake(true)
+      setLives(lives - 1);
+      setShowHint(showHint + 1);
+      setScreenShake(true);
       setTimeout(() => {
-        setScreenShake(false)
-      }, 500)
+        setScreenShake(false);
+      }, 500);
     }
   }
+
   useEffect(() => {
     if (lives === 0) {
       handleLoss();
     }
     if (screenShake) {
-      document.body.className = "shake-screen"
+      document.body.className = "shake-screen";
     } else {
-      document.body.className = ""
+      document.body.className = "";
     }
-  }, [lives, setLives, screenShake])
+  }, [lives, setLives, screenShake]);
   return (
     <>
       <Modal open={open} onClose={handleModal}>
