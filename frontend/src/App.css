@@ -26,6 +26,7 @@ a{
 }
 .no-blur{
   width: 250px;
+  border-radius: 20px;
 }
 .guess-container{
   display: flex;
@@ -134,4 +135,17 @@ a{
 }
 li{
   list-style-type: disc;
+}
+.submit-button{
+  width: 10%;
+  border-radius: 10px;
+  border: 1px solid white;
+  background-color: #1e2030;
+  color: white;
+  height: 25px;
+  cursor: pointer;
+}
+.submit-button:hover{
+  transform: scale(1.1);
+  transition: transform 0.1s ease-in-out;
 }

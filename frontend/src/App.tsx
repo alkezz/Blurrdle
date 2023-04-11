@@ -23,7 +23,7 @@ function App(): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
   const [isSelected, setIsSelected] = useState<boolean>(false)
 
-  const detectSize = () => {
+  const detectSize = (): void => {
     setWindowDimension({width: window.innerWidth, height: window.innerHeight})
   }
   useEffect(() => {
@@ -65,6 +65,7 @@ function App(): JSX.Element {
       document.body.className = "";
     }
   }, [lives, setLives, screenShake, userGuess, setUserGuess, showHint, setShowHint]);
+  if(!data.Books[0]) return null
   return (
     <>
       <Modal open={open} onClose={handleModal}>
@@ -112,18 +113,24 @@ function App(): JSX.Element {
       </Modal>
       <div className='abc'>
         <div className="full-page-container">
-          <h1>Welcome to Bookle
+          <h1>Welcome to Bookle! &nbsp;
             <Tooltip arrow title="More info">
               <InfoIcon onClick={handleModal} sx={{ cursor: "pointer" }} />
             </Tooltip>
           </h1>
-          <h3>Created by <a rel="noreferrer" href='https://www.ali-ezzeddine.com' target='_blank'>Ali Ezzeddine</a></h3>
           <br />
-          {lives > 0 && !isCorrect && (
+          {lives > 0 && !isCorrect && data.Books[0].blurred_cover && (
             <div className='guess-container'>
-              <h2>Guess the book!</h2>
-              <img alt="book cover" className={isCorrect ? "no-blur" : "blur"} src={data.Books[0].book_cover} />
-              <div style={{ marginTop: "50px" }}>
+              <h2>Can you guess this book?</h2>
+              <>
+                <span>Title:</span>
+                <span>{data.Books[0].title.split(" ").length} Words</span>
+                <span>Average Rating:</span>
+                <Rating precision={0.1} value={Number(data.Books[0].avg_rating)} readOnly />
+              </>
+              <br/>
+              <img alt="book cover" className="no-blur" src={data.Books[0].blurred_cover} />
+              <div style={{ marginTop: "15px" }}>
                 {[...Array(lives)].map((_, i) =>
                   <FavoriteIcon sx={{ color: "red" }} />
                 )}
@@ -131,15 +138,10 @@ function App(): JSX.Element {
                   <span className='falling-number'>-1</span>
                 )}
               </div>
-              <>
-                <span>Title: {data.Books[0].title.split(" ").length} words</span>
-                <span>Average Rating:</span>
-                <Rating precision={0.1} value={Number(data.Books[0].avg_rating)} readOnly />
-              </>
-              <br/>
+              {/* <br/> */}
               <AutocompleteSearchBox isSelected={isSelected} setIsSelected={setIsSelected} inputValue={inputValue} setInputValue={setInputValue} />
               <br/>
-              <button onClick={handleSubmit}>Submit</button>
+              <button className='submit-button' onClick={handleSubmit}>SUBMIT</button>
               <div className='hint-container'>
                 {showHint >= 1 && (
                   <div className='hint'>
@@ -164,7 +166,7 @@ function App(): JSX.Element {
               </div>
             </div>
           )}
-          {lives > 0 && isCorrect && (
+          {lives > 0 && isCorrect && data.Books[0].book_cover && (
             <div className='guess-container'>
               <Confetti width={windowDimension.width} height={windowDimension.height} />
               <h2>You got it!</h2>
