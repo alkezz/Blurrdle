@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import data from "./BookData/bookData.json"
+import AutocompleteSearchBox from './AutoComplete/AutoCompleteSearchBox';
 import InfoIcon from '@mui/icons-material/Info';
 import Rating from '@mui/material/Rating';
 import Tooltip from '@mui/material/Tooltip';
@@ -9,15 +10,28 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import Confetti from 'react-confetti'
 
 function App(): JSX.Element {
+  const [windowDimension, setWindowDimension] = useState<object>({width: window.innerWidth, height: window.innerHeight})
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
-  const [userGuess, setUserGuess] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>('');
+  const [userGuess, setUserGuess] = useState<string>();
   const [lives, setLives] = useState<number>(5);
   const [screenShake, setScreenShake] = useState<boolean>(false);
   const [showHint, setShowHint] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
+  const [isSelected, setIsSelected] = useState<boolean>(false)
 
+  const detectSize = () => {
+    setWindowDimension({width: window.innerWidth, height: window.innerHeight})
+  }
+  useEffect(() => {
+    window.addEventListener('resize', detectSize);
+    return () => {
+      window.removeEventListener('resize', detectSize)
+    }
+  }, [windowDimension])
   const handleModal = (): void => open ? setOpen(false) : setOpen(true);
   const handleWin = (): void => {
     setIsCorrect(true);
@@ -26,16 +40,19 @@ function App(): JSX.Element {
 
   }
   const handleSubmit = (): void => {
-    if (userGuess.toLowerCase() === data.Books[0].title.toLowerCase()) {
+    if (inputValue && inputValue.toLowerCase() === data.Books[0].title.toLowerCase()) {
       handleWin();
     } else {
       setLives(lives - 1);
       setShowHint(showHint + 1);
       setScreenShake(true);
+      setUserGuess("")
       setTimeout(() => {
         setScreenShake(false);
       }, 500);
     }
+    setInputValue('')
+    setIsSelected(false)
   }
 
   useEffect(() => {
@@ -47,7 +64,7 @@ function App(): JSX.Element {
     } else {
       document.body.className = "";
     }
-  }, [lives, setLives, screenShake]);
+  }, [lives, setLives, screenShake, userGuess, setUserGuess, showHint, setShowHint]);
   return (
     <>
       <Modal open={open} onClose={handleModal}>
@@ -102,7 +119,7 @@ function App(): JSX.Element {
           </h1>
           <h3>Created by <a rel="noreferrer" href='https://www.ali-ezzeddine.com' target='_blank'>Ali Ezzeddine</a></h3>
           <br />
-          {lives > 0 && (
+          {lives > 0 && !isCorrect && (
             <div className='guess-container'>
               <h2>Guess the book!</h2>
               <img alt="book cover" className={isCorrect ? "no-blur" : "blur"} src={data.Books[0].book_cover} />
@@ -119,7 +136,9 @@ function App(): JSX.Element {
                 <span>Average Rating:</span>
                 <Rating precision={0.1} value={Number(data.Books[0].avg_rating)} readOnly />
               </>
-              <input onChange={(e) => setUserGuess(e.target.value)} placeholder='Guess a book' className='guess-input' />
+              <br/>
+              <AutocompleteSearchBox isSelected={isSelected} setIsSelected={setIsSelected} inputValue={inputValue} setInputValue={setInputValue} />
+              <br/>
               <button onClick={handleSubmit}>Submit</button>
               <div className='hint-container'>
                 {showHint >= 1 && (
@@ -142,6 +161,28 @@ function App(): JSX.Element {
                     Hint: It was written by {data.Books[0].author}
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+          {lives > 0 && isCorrect && (
+            <div className='guess-container'>
+              <Confetti width={windowDimension.width} height={windowDimension.height} />
+              <h2>You got it!</h2>
+              <h2>The correct answer was <span style={{ color: "green" }}>{data.Books[0].title}</span> by {data.Books[0].author}!</h2>
+              <img alt="book cover" className={isCorrect ? "no-blur" : "blur"} src={data.Books[0].book_cover} />
+              <div className='hint-container'>
+                  <div className='hint'>
+                    Hint: {data.Books[0].hint_1}
+                  </div>
+                  <div className='hint'>
+                    Hint: {data.Books[0].hint_2}. It was released in {data.Books[0].release_year}
+                  </div>
+                  <div className='hint'>
+                    Hint: {data.Books[0].hint_3}
+                  </div>
+                  <div className='hint'>
+                    Hint: It was written by {data.Books[0].author}
+                  </div>
               </div>
             </div>
           )}

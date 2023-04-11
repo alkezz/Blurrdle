@@ -3,11 +3,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 10px;
 }
 body{
   background-color: rgb(30, 32, 48);
   color: white;
+  overflow-x: hidden;
 }
 .full-page-container {
   /* border: 1px solid black; */
@@ -20,7 +21,7 @@ a{
   color: white;
 }
 .blur{
-  filter: blur(15px);
+  filter: blur(20px);
   width: 250px;
 }
 .no-blur{
@@ -30,6 +31,7 @@ a{
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: -50px;
 }
 .guess-input{
   margin-top: 50px;
