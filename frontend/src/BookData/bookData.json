@@ -7,9 +7,9 @@
       "book_cover": "https://m.media-amazon.com/images/I/71QcX1DbklL.jpg",
       "avg_rating": "4.17",
       "description": "One of the world's great anti-war books. Centering on the infamous fire-bombing of Dresden, Billy Pilgrim's odyssey through time reflects the mythic journey of our own fractured lives as we search for meaning in what we are afraid to know.",
-      "hint_1": "The main character's name is Billy Pilgrim",
+      "hint_3": "The main character's name is Billy Pilgrim",
       "hint_2": "It's a semi-autobiographic science fiction-infused anti-war novel",
-      "hint_3": "It was the author's first novel to become a bestseller, staying on the New York Times bestseller list for sixteen weeks and peaking at No. 4."
+      "hint_1": "It was the author's first novel to become a bestseller, staying on the New York Times bestseller list for sixteen weeks and peaking at No. 4."
     },
     {
       "title": "The End of Eternity",
@@ -18,9 +18,229 @@
       "book_cover": "https://covers.openlibrary.org/b/id/12989101-L.jpg",
       "avg_rating": "4.71",
       "description": "The story of temporal engineers who meta-regulate the history of humanity through the centuries, eliminating risk, adventure, and space travel in the process. One man rebels in order to save the existence of someone he loves, and in the end the time bureaucracy is destroyed for the sake of individuality and human achievement. The theme is the opposite of the Foundation stories, where the central planners and manipulators of humanity always dominate.",
-      "hint_1": "The main character's name is Andrew Harlan",
+      "hint_3": "The main character's name is Andrew Harlan",
       "hint_2": "Its premise is that of a causal loop, a type of temporal paradox in which events and their causes form a loop.",
-      "hint_3": "The book was highly acclaimed by critics. The New York Times reviewer Villiers Gerson praised the novel by stating it 'has suspense on every page' and 'exhibits in every chapter the plot twists for which the author is famous.'"
+      "hint_1": "The book was highly acclaimed by critics. The New York Times reviewer Villiers Gerson praised the novel by stating it 'has suspense on every page' and 'exhibits in every chapter the plot twists for which the author is famous.'"
+    },
+    {
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "release_year": "1960",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51F86NFhVEL._SX329_BO1,204,203,200_.jpg",
+      "avg_rating": "4.27",
+      "description": "A Southern Gothic novel set in the 1930s, it deals with the racial injustice faced by African Americans through the eyes of a young girl named Scout Finch.",
+      "hint_1": "The story is narrated from the perspective of a young girl named Scout",
+      "hint_2": "It won the Pulitzer Prize for Fiction in 1961",
+      "hint_3": "The plot revolves around a trial that exposes the deep-seated racism in a small Southern town."
+    },
+    {
+      "title": "Brave New World",
+      "author": "Aldous Huxley",
+      "release_year": "1932",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51SV30dGRQL._SY344_BO1,204,203,200_.jpg",
+      "avg_rating": "3.99",
+      "description": "A dystopian novel that portrays a futuristic world where human reproduction is controlled, and citizens are conditioned to conform to a rigid social hierarchy.",
+      "hint_1": "The story is set in a totalitarian society with a caste system",
+      "hint_2": "It presents a chilling vision of a future where technology and drugs are used to control society",
+      "hint_3": "The author also wrote 'Brave New World Revisited,' an essay discussing the themes of the novel in light of the post-World War II era."
+    },
+    {
+      "title": "The Catcher in the Rye",
+      "author": "J.D. Salinger",
+      "release_year": "1951",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51xu6AB9C9L._SX331_BO1,204,203,200_.jpg",
+      "avg_rating": "3.8",
+      "description": "A controversial novel that follows the rebellious teenage protagonist, Holden Caulfield, as he navigates the complexities of growing up and the challenges of the adult world.",
+      "hint_1": "The story is told in first-person from the perspective of a troubled teenager",
+      "hint_2": "It has been widely debated for its themes of teenage angst, alienation, and rebellion",
+      "hint_3": "The book has been banned in several schools and libraries for its language and content."
+    },
+    {
+      "title": "One Hundred Years of Solitude",
+      "author": "Gabriel Garcia Marquez",
+      "release_year": "1967",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51ZVyrNZfEL._SY344_BO1,204,203,200_.jpg",
+      "avg_rating": "4.06",
+      "description": "A multigenerational epic that follows the Buendia family in the fictional town of Macondo, blending elements of magical realism with the history of Colombia.",
+      "hint_1": "The novel is known for its intricate and complex family tree of characters",
+      "hint_2": "It explores themes of love, solitude, and the cyclical nature of life",
+      "hint_3": "The author won the Nobel Prize in Literature in 1982 for his masterful storytelling and vivid imagination."
+    },
+    {
+      "title": "The Handmaid's Tale",
+      "author": "Margaret Atwood",
+      "release_year": "1985",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51eZm6GSPBL._SY344_BO1,204,203,200_.jpg",
+      "avg_rating": "4.09",
+      "description": "A dystopian novel set in a totalitarian society where women are oppressed and used for reproductive purposes, following the story of Offred, a Handmaid who fights for her freedom.",
+      "hint_1": "The book portrays a nightmarish future where women's rights are severely restricted",
+      "hint_2": "It explores themes of gender, power, and individuality",
+      "hint_3": "The novel has been adapted into a successful TV series, winning multiple awards, and has become a symbol of feminist literature."
+    },
+    {
+      "title": "The Sound and the Fury",
+      "author": "William Faulkner",
+      "release_year": "1929",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51Vi5biOpDL._SY344_BO1,204,203,200_.jpg",
+      "avg_rating": "3.91",
+      "description": "A modernist novel that explores the decline of the Compson family in the fictional town of Jefferson, Mississippi, through the perspectives of four different narrators.",
+      "hint_1": "The novel is known for its complex and fragmented narrative structure",
+      "hint_2": "It portrays the disintegration of a Southern aristocratic family and their struggles with time and memory",
+      "hint_3": "The first section of the book is narrated by a mentally disabled character named Benjy."
+    },
+    {
+      "title": "Beloved",
+      "author": "Toni Morrison",
+      "release_year": "1987",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51hQgvA8BzL._SY344_BO1,204,203,200_.jpg",
+      "avg_rating": "3.86",
+      "description": "A powerful novel that tells the story of Sethe, a former slave who escapes to freedom, but is haunted by the ghost of her deceased daughter, Beloved.",
+      "hint_1": "The book explores the themes of slavery, trauma, and memory",
+      "hint_2": "It is a poetic and haunting portrayal of the African American experience",
+      "hint_3": "The author won the Nobel Prize in Literature in 1993 for her body of work, which includes this novel."
+    },
+    {
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "release_year": "1925",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51ZODl4Z4vL._SY344_BO1,204,203,200_.jpg",
+      "avg_rating": "3.91",
+      "description": "A classic novel set in the Jazz Age of 1920s America, depicting the lavish lifestyle and downfall of Jay Gatsby as he pursues his unattainable love interest, Daisy Buchanan.",
+      "hint_1": "The novel explores the decadence, disillusionment, and the elusive American Dream of the 1920s",
+      "hint_2": "It is narrated from the perspective of a character who is an outsider to the wealthy world he observes",
+      "hint_3": "The book has been adapted into numerous films, stage plays, and has been widely analyzed for its symbolism and social commentary."
+    },
+    {
+      "title": "The Chronicles of Narnia: The Lion, the Witch, and the Wardrobe",
+      "author": "C.S. Lewis",
+      "release_year": "1950",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51tXJYItbiL._SY344_BO1,204,203,200_.jpg",
+      "avg_rating": "4.21",
+      "description": "A beloved children's fantasy novel that follows the adventures of four siblings who enter a magical world called Narnia through a wardrobe and become embroiled in a battle between good and evil.",
+      "hint_1": "The novel is the first book in a series that has captivated generations of young readers",
+      "hint_2": "It features talking animals, mythical creatures, and a battle against an evil witch",
+      "hint_3": "The book has been adapted into multiple films, TV shows, and stage productions, and is known for its Christian allegory and timeless themes of courage, faith, and sacrifice."
+    },
+    {
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "release_year": "1813",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51Ue+6Uy7wL._SY344_BO1,204,203,200_.jpg",
+      "avg_rating": "4.25",
+      "description": "A classic romance novel that follows the story of Elizabeth Bennet and Mr. Darcy, two characters with different social status and personalities, as they navigate misunderstandings, societal expectations, and their own pride and prejudices.",
+      "hint_1": "The novel is known for its witty and satirical portrayal of the social norms, manners, and conventions of the 19th century English society.",
+      "hint_2": "It explores themes of love, marriage, class, and reputation, and provides a commentary on the role of women in society during that time period.",
+      "hint_3": "The book has been widely acclaimed for its memorable characters, engaging plot, and Austen's skillful use of irony and humor in her writing."
+    },
+    {
+      "title": "The Chronicles of Harry Potter and the Philosopher's Stone",
+      "author": "J.K. Rowling",
+      "release_year": "1997",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51UoqRAxwZL._SY344_BO1,204,203,200_.jpg",
+      "avg_rating": "4.47",
+      "description": "The first book in the bestselling fantasy series that follows the journey of a young wizard named Harry Potter as he discovers his magical abilities, attends Hogwarts School of Witchcraft and Wizardry, and faces the dark forces of the wizarding world.",
+      "hint_1": "The novel introduces readers to the wizarding world, its magical creatures, and the ongoing battle between good and evil, with a focus on friendship, bravery, and the power of love.",
+      "hint_2": "It is a story of adventure, mystery, and self-discovery, with a richly imagined world and a diverse cast of characters.",
+      "hint_3": "The book has captivated readers of all ages, spawning a successful film franchise, theme parks, and a global fanbase."
+    },
+    {
+      "title": "The Goblet of Fire",
+      "author": "J.K. Rowling",
+      "release_year": "2000",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51s7jK6jbjL._SY344_BO1,204,203,200_.jpg",
+      "avg_rating": "4.56",
+      "description": "The fourth book in the Harry Potter series, where Harry competes in the dangerous Triwizard Tournament, faces new challenges, and uncovers dark secrets that will shape the future of the wizarding world.",
+      "hint_1": "The novel introduces the Triwizard Tournament, a magical competition that brings together students from different wizarding schools, but not everything goes as planned.",
+      "hint_2": "It delves into themes of friendship, loyalty, courage, and the consequences of choices made in the face of danger and adversity.",
+      "hint_3": "The book is a turning point in the series, with a dramatic climax and a shocking revelation that leaves readers eagerly anticipating the next installment."
+    },
+    {
+      "title": "The Deathly Hallows",
+      "author": "J.K. Rowling",
+      "release_year": "2007",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51g0Baa1wEL._SY344_BO1,204,203,200_.jpg",
+      "avg_rating": "4.62",
+      "description": "The seventh and final book in the Harry Potter series, where Harry, Ron, and Hermione embark on a dangerous quest to find and destroy the Horcruxes, while facing their ultimate showdown against Lord Voldemort.",
+      "hint_1": "The novel is a culmination of the entire series, wrapping up the overarching story arc and resolving many long-standing mysteries and conflicts.",
+      "hint_2": "It explores themes of sacrifice, love, mortality, and the power of choice, as the characters face their darkest fears and make decisions that will shape the fate of the wizarding world.",
+      "hint_3": "The book is an emotional and action-packed conclusion to the epic tale of Harry Potter, leaving readers with a sense of closure and satisfaction."
+    },
+    {
+      "title": "Crime and Punishment",
+      "author": "Fyodor Dostoevsky",
+      "release_year": "1866",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/81lCzV4X4LL.jpg",
+      "avg_rating": "4.22",
+      "description": "A psychological novel that follows the story of Raskolnikov, a destitute former student in St. Petersburg, who plans and carries out a heinous crime and wrestles with guilt, paranoia, and the consequences of his actions.",
+      "hint_1": "The main character, Raskolnikov, is a complex and tormented individual who justifies his crime based on a philosophical theory of extraordinary men and their right to commit crime for a higher purpose.",
+      "hint_2": "The novel delves deep into the psychological turmoil of Raskolnikov's guilt, inner conflicts, and his ultimate redemption, as he grapples with the moral and psychological repercussions of his crime.",
+      "hint_3": "Set against the backdrop of 19th-century Russia, the novel explores themes of morality, redemption, poverty, and the human condition, and is considered a masterpiece of world literature."
+    },
+    {
+      "title": "Fahrenheit 451",
+      "author": "Ray Bradbury",
+      "release_year": "1953",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/71HyHp+KmQL.jpg",
+      "avg_rating": "4.02",
+      "description": "A dystopian novel set in a future society where books are banned and 'firemen' burn any that are found, and follows the story of a fireman named Guy Montag who starts to question the status quo and his role in it.",
+      "hint_1": "In this society, reading and owning books is considered a crime, and people are kept distracted by mindless entertainment and superficial pursuits.",
+      "hint_2": "As Montag encounters people who challenge his beliefs and discovers the power of literature, he becomes disillusioned with the oppressive regime and embarks on a journey of self-discovery and rebellion against the dystopian society.",
+      "hint_3": "The novel is a powerful critique of censorship, totalitarianism, and the importance of free thought, and has been praised for its thought-provoking themes and vivid imagery."
+    },
+    {
+      "title": "War and Peace",
+      "author": "Leo Tolstoy",
+      "release_year": "1869",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51f+kFll+rL._SX327_BO1,204,203,200_.jpg",
+      "avg_rating": "4.12",
+      "description": "A classic novel that tells the story of Russian society during the Napoleonic Wars, and follows the lives of several aristocratic families as they navigate love, politics, and war in 19th century Russia.",
+      "hint_1": "This epic novel is known for its rich character development and complex plot, spanning multiple generations and involving a large cast of characters.",
+      "hint_2": "The novel explores themes of love, fate, free will, and the nature of war, and provides a detailed insight into Russian society and its cultural, political, and social complexities during that time period.",
+      "hint_3": "Considered one of the greatest novels of world literature, this masterpiece by Tolstoy is renowned for its sweeping scope, masterful storytelling, and profound philosophical reflections on the human condition."
+    },
+    {
+      "title": "The Odyssey",
+      "author": "Homer",
+      "release_year": "8th century BCE",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51Vup-5eZnL._SX331_BO1,204,203,200_.jpg",
+      "avg_rating": "3.74",
+      "description": "An epic poem that follows the adventures of the Greek hero Odysseus as he tries to return home from the Trojan War, encountering mythical creatures, gods, and challenges along the way.",
+      "hint_1": "This ancient Greek epic is considered one of the foundational works of Western literature and has had a profound influence on subsequent works of fiction and poetry.",
+      "hint_2": "The poem is divided into 24 books and chronicles the various trials and tribulations that Odysseus faces during his long journey home, including encounters with monsters like Cyclops and Sirens, and his struggles against the wrath of the gods.",
+      "hint_3": "The Odyssey is known for its rich imagery, vivid storytelling, and exploration of themes such as heroism, bravery, and the nature of destiny, making it a timeless classic that continues to captivate readers to this day."
+    },
+    {
+      "title": "The Iliad",
+      "author": "Homer",
+      "release_year": "8th century BCE",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51-GqLp-z3L._SX331_BO1,204,203,200_.jpg",
+      "avg_rating": "4.04",
+      "description": "An epic poem that tells the story of the Trojan War, focusing on the Greek hero Achilles and the siege of the city of Troy, with themes of honor, glory, and the futility of war.",
+      "hint_1": "This ancient Greek epic is one of the oldest and most important works of Western literature, and it serves as a foundational text for the study of Greek mythology and heroic tradition.",
+      "hint_2": "The Iliad is known for its vivid descriptions of battles, its exploration of the psychological and emotional effects of war on individuals and societies, and its timeless portrayal of the hero Achilles and his tragic fate.",
+      "hint_3": "The poem is divided into 24 books and contains numerous epic battles, divine interventions, and complex characters, making it a masterpiece of ancient storytelling that continues to captivate readers with its timeless themes and powerful imagery."
+    },
+    {
+      "title": "The Road",
+      "author": "Cormac McCarthy",
+      "release_year": "2006",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/51pbqbluzbL._SX322_BO1,204,203,200_.jpg",
+      "avg_rating": "3.96",
+      "description": "A post-apocalyptic novel that follows a father and his young son as they journey through a desolate and dangerous landscape, facing challenges of survival, morality, and the enduring bond between parent and child.",
+      "hint_1": "This novel is written by a Pulitzer Prize-winning author known for his distinctive prose style characterized by spare and poetic language.",
+      "hint_2": "The story is set in a bleak and dystopian world where the natural and social order has collapsed, and the father and son must navigate through the remnants of civilization in search of hope and redemption.",
+      "hint_3": "The novel explores themes of humanity, morality, and the resilience of the human spirit in the face of extreme adversity, making it a haunting and powerful read that has garnered critical acclaim and a wide readership."
+    },
+    {
+      "title": "The Goldfinch",
+      "author": "Donna Tartt",
+      "release_year": "2013",
+      "book_cover": "https://images-na.ssl-images-amazon.com/images/I/81QZ4e6C1CL.jpg",
+      "avg_rating": "3.87",
+      "description": "A sweeping and immersive novel that follows a young boy named Theo Decker, who survives a terrorist attack at a museum and becomes entangled in a world of art, crime, and the pursuit of redemption.",
+      "hint_1": "This novel is written by a Pulitzer Prize-winning author known for her meticulous attention to detail and richly descriptive prose.",
+      "hint_2": "The story is a coming-of-age tale that spans multiple decades and cities, exploring themes of loss, trauma, and the enduring power of art and beauty in the face of adversity.",
+      "hint_3": "The novel is a complex and deeply moving exploration of the human condition, with vividly drawn characters and a compelling narrative that has captivated readers around the world."
     }
   ]
 }
