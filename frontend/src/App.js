@@ -155,22 +155,22 @@ function App() {
               </>
               <div className='hint-container'>
                 {showHint >= 1 && (
-                  <div className='hint'>
+                  <div className='game-over-hint'>
                     Hint: {data.Books[0].hint_1}
                   </div>
                 )}
                 {showHint >= 2 && (
-                  <div className='hint'>
+                  <div className='game-over-hint'>
                     Hint: {data.Books[0].hint_2}. It was released in {data.Books[0].release_year}
                   </div>
                 )}
                 {showHint >= 3 && (
-                  <div className='hint'>
+                  <div className='game-over-hint'>
                     Hint: {data.Books[0].hint_3}
                   </div>
                 )}
                 {showHint >= 4 && (
-                  <div className='hint'>
+                  <div className='game-over-hint'>
                     Hint: It was written by {data.Books[0].author}
                   </div>
                 )}
