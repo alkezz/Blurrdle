@@ -1,59 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import data from "./BookData/bookData.json"
-import AutocompleteSearchBox from './AutoComplete/AutoCompleteSearchBox';
-import InfoIcon from '@mui/icons-material/Info';
-import Rating from '@mui/material/Rating';
-import Tooltip from '@mui/material/Tooltip';
-import Modal from '@mui/material/Modal';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import NewReleasesIcon from '@mui/icons-material/NewReleases';
-import Confetti from 'react-confetti'
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import data from "./BookData/bookData.json";
+import AutocompleteSearchBox from "./AutoComplete/AutoCompleteSearchBox";
+import InfoIcon from "@mui/icons-material/Info";
+import Rating from "@mui/material/Rating";
+import Tooltip from "@mui/material/Tooltip";
+import Modal from "@mui/material/Modal";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import NewReleasesIcon from "@mui/icons-material/NewReleases";
+import Confetti from "react-confetti";
 
 function App(): JSX.Element {
-  const [windowDimension, setWindowDimension] = useState<object>({width: window.innerWidth, height: window.innerHeight})
+  const [windowDimension, setWindowDimension] = useState<object>({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>("");
   const [userGuess, setUserGuess] = useState<string>();
   const [lives, setLives] = useState<number>(5);
   const [screenShake, setScreenShake] = useState<boolean>(false);
   const [showHint, setShowHint] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
-  const [isSelected, setIsSelected] = useState<boolean>(false)
+  const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [isHintOneVisible, setIsHintOneVisible] = useState<boolean>(false);
+  const [isHintTwoVisible, setIsHintTwoVisible] = useState<boolean>(false);
 
   const detectSize = (): void => {
-    setWindowDimension({width: window.innerWidth, height: window.innerHeight})
-  }
+    setWindowDimension({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  };
   useEffect(() => {
-    window.addEventListener('resize', detectSize);
+    window.addEventListener("resize", detectSize);
     return () => {
-      window.removeEventListener('resize', detectSize)
-    }
-  }, [windowDimension])
-  const handleModal = (): void => open ? setOpen(false) : setOpen(true);
+      window.removeEventListener("resize", detectSize);
+    };
+  }, [windowDimension]);
+  const handleModal = (): void => (open ? setOpen(false) : setOpen(true));
   const handleWin = (): void => {
     setIsCorrect(true);
-  }
-  const handleLoss = (): void => {
-
-  }
+  };
+  const handleLoss = (): void => {};
   const handleSubmit = (): void => {
-    if (inputValue && inputValue.toLowerCase() === data.Books[0].title.toLowerCase()) {
+    if (
+      inputValue &&
+      inputValue.toLowerCase() === data.Books[0].title.toLowerCase()
+    ) {
       handleWin();
     } else {
       setLives(lives - 1);
+      if (!isHintOneVisible) {
+        setIsHintOneVisible(true);
+      } else {
+        setIsHintTwoVisible(true);
+      }
       setShowHint(showHint + 1);
       setScreenShake(true);
-      setUserGuess("")
+      setUserGuess("");
       setTimeout(() => {
         setScreenShake(false);
       }, 500);
     }
-    setInputValue('')
-    setIsSelected(false)
-  }
+    setInputValue("");
+    setIsSelected(false);
+  };
 
   useEffect(() => {
     if (lives === 0) {
@@ -64,158 +78,284 @@ function App(): JSX.Element {
     } else {
       document.body.className = "";
     }
-  }, [lives, setLives, screenShake, userGuess, setUserGuess, showHint, setShowHint]);
-  if(!data.Books[0]) return null
+  }, [
+    lives,
+    setLives,
+    screenShake,
+    userGuess,
+    setUserGuess,
+    showHint,
+    setIsHintOneVisible,
+    setIsHintTwoVisible,
+    isHintOneVisible,
+    setShowHint,
+  ]);
+  console.log("ISVISBLE", isHintOneVisible, isHintTwoVisible);
+  if (!data.Books[0]) return null;
   return (
     <>
-      <Modal open={open} onClose={handleModal}>
-        <div className='modal-container'>
-          <p>Hello! My name is Ali Ezzeddine, thanks for checking out my app!</p>
-          <p>I am a huge book worm and I adore Wordle so I thought why not combine the two!</p>
-          <h3>How to play:</h3>
-          <ol>
-            <li>
-              You have 5 lives, every time you guess a book title wrong you lose a life
-            </li>
-            <li>
-              You are given a blurry image of the book cover, how many words are in the title, and the average rating (from OpenLibrary)
-            </li>
-            <li>
-              After each wrong guess a hint will appear. You will get 4 hints including the book author
-            </li>
-          </ol>
-          Keep going until you either lose all your lives or you get the book right. Good Luck!
-          <div>
-            <br />
-            <Tooltip title='Github' arrow>
-              <a rel="noreferrer" href='https://www.github.com/alkezz' target='_blank'>
-                <GitHubIcon sx={{ fontSize: "28px" }} />
+      <div className="modal-container">
+        <Modal
+          open={open}
+          onClose={handleModal}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            height: "fit-content",
+          }}
+        >
+          <div className="modal-content">
+            <p>👋 Hello! My name is Ali Ezzeddine and welcome to Bookle!</p>
+            <p>
+              Bookle is a mash-up between the beloved game "Wordle" and all the
+              other "dle" games like{" "}
+              <a
+                rel="noreferrer"
+                href="https://globle-game.com/"
+                target="_blank"
+              >
+                Globle
               </a>
-            </Tooltip>
-            &nbsp;
-            &nbsp;
-            &nbsp;
-            <Tooltip title='LinkedIn' arrow>
-              <a rel="noreferrer" href='https://www.linkedin.com/in/ali-ezzeddine-17b2b6248/' target='_blank'>
-                <LinkedInIcon sx={{ fontSize: "28px" }} />
+              ,{" "}
+              <a
+                rel="noreferrer"
+                href="https://oec.world/en/tradle/"
+                target="_blank"
+              >
+                Tradle
               </a>
-            </Tooltip>
-            &nbsp;
-            &nbsp;
-            &nbsp;
-            <Tooltip title='Portfolio' arrow>
-              <a rel="noreferrer" href='https://www.ali-ezzeddine.com' target='_blank'>
-                <NewReleasesIcon sx={{ fontSize: "28px" }} />
+              , and{" "}
+              <a
+                rel="noreferrer"
+                href="https://www.gamedle.wtf/#"
+                target="_blank"
+              >
+                Gamdle
               </a>
-            </Tooltip>
+            </p>
+            <p>
+              The objective is to guess the book based on clues in 5 guesses.
+            </p>
+            <h3>How to play:</h3>
+            <ol>
+              <li>
+                You have 5 lives, every time you guess a book title wrong you
+                lose a life
+              </li>
+              <li>
+                You are given a blurry image of the book cover, how many words
+                are in the title, and the average rating (from OpenLibrary)
+              </li>
+              <li>
+                After each wrong guess a hint will appear. You will get 4 hints
+                including the book author
+              </li>
+            </ol>
+            Keep going until you either lose all your lives or you get the book
+            right. Good luck!
+            <div>
+              <br />
+              <Tooltip title="Github" arrow>
+                <a
+                  rel="noreferrer"
+                  href="https://www.github.com/alkezz"
+                  target="_blank"
+                >
+                  <GitHubIcon sx={{ fontSize: "28px" }} />
+                </a>
+              </Tooltip>
+              &nbsp; &nbsp; &nbsp;
+              <Tooltip title="LinkedIn" arrow>
+                <a
+                  rel="noreferrer"
+                  href="https://www.linkedin.com/in/ali-ezzeddine-17b2b6248/"
+                  target="_blank"
+                >
+                  <LinkedInIcon sx={{ fontSize: "28px" }} />
+                </a>
+              </Tooltip>
+              &nbsp; &nbsp; &nbsp;
+              <Tooltip title="Portfolio" arrow>
+                <a
+                  rel="noreferrer"
+                  href="https://www.ali-ezzeddine.com"
+                  target="_blank"
+                >
+                  <NewReleasesIcon sx={{ fontSize: "28px" }} />
+                </a>
+              </Tooltip>
+            </div>
           </div>
-        </div>
-      </Modal>
-      <div className='abc'>
+        </Modal>
+      </div>
+      <div className="abc">
         <div className="full-page-container">
-          <h1>Welcome to Bookle! &nbsp;
+          <h1>
+            Welcome to Bookle! &nbsp;
             <Tooltip arrow title="More info">
               <InfoIcon onClick={handleModal} sx={{ cursor: "pointer" }} />
             </Tooltip>
           </h1>
-          <br />
           {lives > 0 && !isCorrect && data.Books[0].blurred_cover && (
-            <div className='guess-container'>
+            <div className="guess-container">
               <h2>Can you guess this book?</h2>
-              <>
-                <span>Title:</span>
-                <span>{data.Books[0].title.split(" ").length} Words</span>
-                <span>Average Rating:</span>
-                <Rating precision={0.1} value={Number(data.Books[0].avg_rating)} readOnly />
-              </>
-              <br/>
-              <img alt="book cover" className="no-blur" src={data.Books[0].blurred_cover} />
-              <div style={{ marginTop: "15px" }}>
-                {[...Array(lives)].map((_, i) =>
-                  <FavoriteIcon sx={{ color: "red" }} />
-                )}
-                {screenShake && (
-                  <span className='falling-number'>-1</span>
-                )}
+              <span style={{ fontSize: "22px" }}>
+                Title: {data.Books[0].title.split(" ").length} Words
+              </span>
+              <br />
+              <AutocompleteSearchBox
+                isSelected={isSelected}
+                setIsSelected={setIsSelected}
+                inputValue={inputValue}
+                setInputValue={setInputValue}
+              />
+              <br />
+              <button className="submit-button" onClick={handleSubmit}>
+                SUBMIT
+              </button>
+              <br />
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                  {showHint >= 1 && (
+                    <div className="left-hint">{data.Books[0].hint_1}</div>
+                  )}
+                  {showHint >= 3 && (
+                    <div className="left-hint">{data.Books[0].hint_3}</div>
+                  )}
+                </div>
+                <div>
+                  <img
+                    alt="book cover"
+                    className="no-blur"
+                    src={data.Books[0].blurred_cover}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                  {showHint >= 2 && (
+                    <div className="right-hint">
+                      {data.Books[0].hint_2}. It was released in{" "}
+                      {data.Books[0].release_year}
+                    </div>
+                  )}
+                  {showHint >= 4 && (
+                    <div className="right-hint">
+                      It was written by {data.Books[0].author}
+                    </div>
+                  )}
+                </div>
               </div>
-              {/* <br/> */}
-              <AutocompleteSearchBox isSelected={isSelected} setIsSelected={setIsSelected} inputValue={inputValue} setInputValue={setInputValue} />
-              <br/>
-              <button className='submit-button' onClick={handleSubmit}>SUBMIT</button>
-              <div className='hint-container'>
+              <div style={{ marginTop: "15px" }}>
+                {[...Array(lives)].map((_, i) => (
+                  <FavoriteIcon sx={{ color: "red", fontSize: "30px" }} />
+                ))}
+                {screenShake && <span className="falling-number">-1</span>}
+              </div>
+              {/* <div className="hint-container">
                 {showHint >= 1 && (
-                  <div className='hint'>
-                    Hint: {data.Books[0].hint_1}
-                  </div>
+                  <div className="hint">Hint: {data.Books[0].hint_1}</div>
                 )}
                 {showHint >= 2 && (
-                  <div className='hint'>
-                    Hint: {data.Books[0].hint_2}. It was released in {data.Books[0].release_year}
+                  <div className="hint">
+                    Hint: {data.Books[0].hint_2}. It was released in{" "}
+                    {data.Books[0].release_year}
                   </div>
                 )}
                 {showHint >= 3 && (
-                  <div className='hint'>
-                    Hint: {data.Books[0].hint_3}
-                  </div>
+                  <div className="hint">Hint: {data.Books[0].hint_3}</div>
                 )}
                 {showHint >= 4 && (
-                  <div className='hint'>
+                  <div className="hint">
                     Hint: It was written by {data.Books[0].author}
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           )}
           {lives > 0 && isCorrect && data.Books[0].book_cover && (
-            <div className='guess-container'>
-              <Confetti width={windowDimension.width} height={windowDimension.height} />
+            <div className="guess-container">
+              <Confetti
+                width={windowDimension.width}
+                height={windowDimension.height}
+              />
               <h2>You got it!</h2>
-              <h2>The correct answer was <span style={{ color: "green" }}>{data.Books[0].title}</span> by {data.Books[0].author}!</h2>
-              <img alt="book cover" className={isCorrect ? "no-blur" : "blur"} src={data.Books[0].book_cover} />
-              <div className='hint-container'>
-                  <div className='hint'>
-                    Hint: {data.Books[0].hint_1}
-                  </div>
-                  <div className='hint'>
-                    Hint: {data.Books[0].hint_2}. It was released in {data.Books[0].release_year}
-                  </div>
-                  <div className='hint'>
-                    Hint: {data.Books[0].hint_3}
-                  </div>
-                  <div className='hint'>
-                    Hint: It was written by {data.Books[0].author}
-                  </div>
+              <h2>
+                The correct answer was{" "}
+                <span style={{ color: "green" }}>{data.Books[0].title}</span> by{" "}
+                {data.Books[0].author}!
+              </h2>
+              <img
+                alt="book cover"
+                className={isCorrect ? "no-blur" : "blur"}
+                src={data.Books[0].book_cover}
+              />
+              <div className="hint-container">
+                <div className="hint">Hint: {data.Books[0].hint_1}</div>
+                <div className="hint">
+                  Hint: {data.Books[0].hint_2}. It was released in{" "}
+                  {data.Books[0].release_year}
+                </div>
+                <div className="hint">Hint: {data.Books[0].hint_3}</div>
+                <div className="hint">
+                  Hint: It was written by {data.Books[0].author}
+                </div>
               </div>
             </div>
           )}
           {lives === 0 && (
-            <div className='guess-container'>
+            <div className="guess-container">
               <h2>Too bad! You didn't get the book right!</h2>
-              <h2>The correct answer was <span style={{ color: "red" }}>{data.Books[0].title}</span> by {data.Books[0].author}</h2>
-              <img alt="book cover" className={"no-blur"} src={data.Books[0].book_cover} />
+              <h2>
+                The correct answer was{" "}
+                <span style={{ color: "red" }}>{data.Books[0].title}</span> by{" "}
+                {data.Books[0].author}
+              </h2>
+              <img
+                alt="book cover"
+                className={"no-blur"}
+                src={data.Books[0].book_cover}
+              />
               <>
                 <p style={{ width: "50%" }}>{data.Books[0].description}</p>
                 <span>Average Rating:</span>
-                <Rating precision={0.1} value={Number(data.Books[0].avg_rating)} readOnly />
+                <Rating
+                  precision={0.1}
+                  value={Number(data.Books[0].avg_rating)}
+                  readOnly
+                />
               </>
-              <div className='hint-container'>
+              <div className="hint-container">
                 {showHint >= 1 && (
-                  <div className='game-over-hint'>
+                  <div className="game-over-hint">
                     Hint: {data.Books[0].hint_1}
                   </div>
                 )}
                 {showHint >= 2 && (
-                  <div className='game-over-hint'>
-                    Hint: {data.Books[0].hint_2}. It was released in {data.Books[0].release_year}
+                  <div className="game-over-hint">
+                    Hint: {data.Books[0].hint_2}. It was released in{" "}
+                    {data.Books[0].release_year}
                   </div>
                 )}
                 {showHint >= 3 && (
-                  <div className='game-over-hint'>
+                  <div className="game-over-hint">
                     Hint: {data.Books[0].hint_3}
                   </div>
                 )}
                 {showHint >= 4 && (
-                  <div className='game-over-hint'>
+                  <div className="game-over-hint">
                     Hint: It was written by {data.Books[0].author}
                   </div>
                 )}

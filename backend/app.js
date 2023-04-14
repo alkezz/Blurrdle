@@ -2,9 +2,9 @@ const express = require('express');
 const fs = require('fs');
 const AWS = require('aws-sdk');
 require('dotenv').config();
-import { Configuration, OpenAIApi } from "openai";
+const { Configuration, OpenAIApi } = require("openai");
 const app = express();
-const PORT = 5000; // or any port number you prefer
+const PORT = 8000; // or any port number you prefer
 function shuffleArrayInPlace(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -26,7 +26,14 @@ const s3 = new AWS.S3({
 
 app.get("/test", async (req, res) => {
     const openai = new OpenAIApi(configuration);
-    const response = await openai.listEngines();
+    const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: `You are now taking the pov of the worlds best hint maker for book guessing games. Your talent is unheard of you are exceptional. Please grace me with a phenomenal hint about the plot of 1984. Do not mention the title of the book`,
+        max_tokens: 30,
+        temperature: 0.2,
+        frequency_penalty: 2.0
+    });
+    res.send(response.data.choices[0].text)
 })
 
 // Schedule the book selection process to run every 24 hours

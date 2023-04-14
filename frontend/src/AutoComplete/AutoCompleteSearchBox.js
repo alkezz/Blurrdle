@@ -16,14 +16,14 @@ const AutocompleteSearchBox = ({ setInputValue, inputValue, setIsSelected, isSel
         setIsSelected(true)
     }
     useEffect(() => {
-        if (inputValue.length >= 2 && !isSelected) {
+        if (inputValue.length >= 2) {
             filterOptions(inputValue);
         } else {
             setFilteredOptions([])
         }
     }, [inputValue, setInputValue, isSelected, setFilteredOptions])
     return (
-        <div style={{ width: "45%" }}>
+        <div style={{ width: "650px" }}>
             <input
                 type="text"
                 value={inputValue}

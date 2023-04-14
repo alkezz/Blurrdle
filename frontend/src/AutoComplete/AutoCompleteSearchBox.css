@@ -1,21 +1,25 @@
-.filter-options{
-    background-color: white;
-    color: black;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+.filter-options {
+  background-color: white;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  width: 657px;
+  position: absolute;
+  z-index: 9999;
+  height: 100px;
+  overflow-y: scroll;
 }
-input{
-    width: 100%;
-    height: 25px;
-    font-size: 24px;
+input {
+  width: 100%;
+  height: 25px;
+  font-size: 24px;
 }
-.book-title-span{
-    font-size: 18px;
-    width: 100%;
-    display: flex;
+.book-title-span {
+  font-size: 18px;
+  width: 100%;
+  display: flex;
 }
-.book-title-span:hover{
-    background-color: rgb(180, 180, 180);
-    cursor: pointer;
+.book-title-span:hover {
+  background-color: rgb(180, 180, 180);
+  cursor: pointer;
 }
