@@ -2,15 +2,9 @@ const express = require('express');
 const fs = require('fs');
 const AWS = require('aws-sdk');
 require('dotenv').config();
-const { Configuration, OpenAIApi, Completions } = require('openai');
+import { Configuration, OpenAIApi } from "openai";
 const app = express();
 const PORT = 5000; // or any port number you prefer
-
-const configuration = new Configuration({
-    organization: "org-8hYIA14gBw6bAOKbZrFDeBtQ",
-    apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
 function shuffleArrayInPlace(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -19,12 +13,21 @@ function shuffleArrayInPlace(array) {
         array[j] = temp;
     }
 }
+const configuration = new Configuration({
+    organization: "org-8hYIA14gBw6bAOKbZrFDeBtQ",
+    apiKey: process.env.OPENAI_API_KEY,
+});
 // AWS S3 configuration
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Replace with your AWS access key
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, // Replace with your AWS secret access key
     region: 'us-east-1', // Replace with your AWS region
 });
+
+app.get("/test", async (req, res) => {
+    const openai = new OpenAIApi(configuration);
+    const response = await openai.listEngines();
+})
 
 // Schedule the book selection process to run every 24 hours
 app.get("/books", async (req, res) => {
