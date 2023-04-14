@@ -297,22 +297,43 @@ function App(): JSX.Element {
                 <span style={{ color: "green" }}>{data.Books[0].title}</span> by{" "}
                 {data.Books[0].author}!
               </h2>
-              <img
-                alt="book cover"
-                className={isCorrect ? "no-blur" : "blur"}
-                src={data.Books[0].book_cover}
-              />
-              <div className="hint-container">
-                <div className="hint">Hint: {data.Books[0].hint_1}</div>
-                <div className="hint">
-                  Hint: {data.Books[0].hint_2}. It was released in{" "}
-                  {data.Books[0].release_year}
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                    <div className="left-hint">{data.Books[0].hint_1}</div>
+                    <div className="left-hint">{data.Books[0].hint_3}</div>
                 </div>
-                <div className="hint">Hint: {data.Books[0].hint_3}</div>
-                <div className="hint">
-                  Hint: It was written by {data.Books[0].author}
+                <div>
+                  <img
+                    alt="book cover"
+                    className="no-blur"
+                    src={data.Books[0].book_cover}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                    <div className="right-hint">
+                      {data.Books[0].hint_2}. It was released in{" "}
+                      {data.Books[0].release_year}
+                    </div>
+                    <div className="right-hint">
+                      It was written by {data.Books[0].author}
+                    </div>
                 </div>
               </div>
+              <h3 style={{width: "50%"}}>{data.Books[0].description}</h3>
             </div>
           )}
           {lives === 0 && (
@@ -323,43 +344,43 @@ function App(): JSX.Element {
                 <span style={{ color: "red" }}>{data.Books[0].title}</span> by{" "}
                 {data.Books[0].author}
               </h2>
-              <img
-                alt="book cover"
-                className={"no-blur"}
-                src={data.Books[0].book_cover}
-              />
-              <>
-                <p style={{ width: "50%" }}>{data.Books[0].description}</p>
-                <span>Average Rating:</span>
-                <Rating
-                  precision={0.1}
-                  value={Number(data.Books[0].avg_rating)}
-                  readOnly
-                />
-              </>
-              <div className="hint-container">
-                {showHint >= 1 && (
-                  <div className="game-over-hint">
-                    Hint: {data.Books[0].hint_1}
-                  </div>
-                )}
-                {showHint >= 2 && (
-                  <div className="game-over-hint">
-                    Hint: {data.Books[0].hint_2}. It was released in{" "}
-                    {data.Books[0].release_year}
-                  </div>
-                )}
-                {showHint >= 3 && (
-                  <div className="game-over-hint">
-                    Hint: {data.Books[0].hint_3}
-                  </div>
-                )}
-                {showHint >= 4 && (
-                  <div className="game-over-hint">
-                    Hint: It was written by {data.Books[0].author}
-                  </div>
-                )}
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                    <div className="left-hint">{data.Books[0].hint_1}</div>
+                    <div className="left-hint">{data.Books[0].hint_3}</div>
+                </div>
+                <div>
+                  <img
+                    alt="book cover"
+                    className="no-blur"
+                    src={data.Books[0].book_cover}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                    <div className="right-hint">
+                      {data.Books[0].hint_2}. It was released in{" "}
+                      {data.Books[0].release_year}
+                    </div>
+                    <div className="right-hint">
+                      It was written by {data.Books[0].author}
+                    </div>
+                </div>
               </div>
+              <p style={{ width: "50%" }}>{data.Books[0].description}</p>
             </div>
           )}
         </div>
