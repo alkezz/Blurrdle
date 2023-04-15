@@ -3,7 +3,6 @@ import "./App.css";
 import data from "./BookData/bookData.json";
 import AutocompleteSearchBox from "./AutoComplete/AutoCompleteSearchBox";
 import InfoIcon from "@mui/icons-material/Info";
-import Rating from "@mui/material/Rating";
 import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -11,6 +10,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import Confetti from "react-confetti";
+import { v4 as uuidv4 } from "uuid";
 
 function App(): JSX.Element {
   const [windowDimension, setWindowDimension] = useState<object>({
@@ -19,6 +19,7 @@ function App(): JSX.Element {
   });
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
+  const [hasWon, setHasWon] = useState<boolean | null>(null);
   const [userGuess, setUserGuess] = useState<string>();
   const [lives, setLives] = useState<number>(5);
   const [screenShake, setScreenShake] = useState<boolean>(false);
@@ -34,6 +35,15 @@ function App(): JSX.Element {
       height: window.innerHeight,
     });
   };
+  if (
+    localStorage.getItem("hasWon") === "true" ||
+    localStorage.getItem("hasWon") === "false"
+  ) {
+    localStorage.setItem("denyAccess", "true");
+  }
+  if (!localStorage.getItem("player_id")) {
+    localStorage.setItem("player_id", uuidv4());
+  }
   useEffect(() => {
     window.addEventListener("resize", detectSize);
     return () => {
@@ -43,15 +53,21 @@ function App(): JSX.Element {
   const handleModal = (): void => (open ? setOpen(false) : setOpen(true));
   const handleWin = (): void => {
     setIsCorrect(true);
+    localStorage.setItem("hasWon", "true");
+    const guesses = 5 - lives;
+    localStorage.setItem("guesses", guesses.toString());
   };
-  const handleLoss = (): void => {};
+  const handleLoss = (): void => {
+    localStorage.setItem("hasWon", "false");
+  };
+  console.log("LOCAL", lives);
   const handleSubmit = (): void => {
     if (
       inputValue &&
       inputValue.toLowerCase() === data.Books[0].title.toLowerCase()
     ) {
       handleWin();
-    } else {
+    } else if (lives > 1) {
       setLives(lives - 1);
       if (!isHintOneVisible) {
         setIsHintOneVisible(true);
@@ -64,32 +80,21 @@ function App(): JSX.Element {
       setTimeout(() => {
         setScreenShake(false);
       }, 500);
+    } else {
+      setLives(lives - 1);
+      handleLoss();
     }
     setInputValue("");
     setIsSelected(false);
   };
 
   useEffect(() => {
-    if (lives === 0) {
-      handleLoss();
-    }
     if (screenShake) {
       document.body.className = "shake-screen";
     } else {
       document.body.className = "";
     }
-  }, [
-    lives,
-    setLives,
-    screenShake,
-    userGuess,
-    setUserGuess,
-    showHint,
-    setIsHintOneVisible,
-    setIsHintTwoVisible,
-    isHintOneVisible,
-    setShowHint,
-  ]);
+  }, [screenShake]);
   console.log("ISVISBLE", isHintOneVisible, isHintTwoVisible);
   if (!data.Books[0]) return null;
   return (
@@ -196,75 +201,78 @@ function App(): JSX.Element {
               <InfoIcon onClick={handleModal} sx={{ cursor: "pointer" }} />
             </Tooltip>
           </h1>
-          {lives > 0 && !isCorrect && data.Books[0].blurred_cover && (
-            <div className="guess-container">
-              <h2>Can you guess this book?</h2>
-              <span style={{ fontSize: "22px" }}>
-                Title: {data.Books[0].title.split(" ").length} Words
-              </span>
-              <br />
-              <AutocompleteSearchBox
-                isSelected={isSelected}
-                setIsSelected={setIsSelected}
-                inputValue={inputValue}
-                setInputValue={setInputValue}
-              />
-              <br />
-              <button className="submit-button" onClick={handleSubmit}>
-                SUBMIT
-              </button>
-              <br />
-              <div style={{ display: "flex" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
-                  {showHint >= 1 && (
-                    <div className="left-hint">{data.Books[0].hint_1}</div>
-                  )}
-                  {showHint >= 3 && (
-                    <div className="left-hint">{data.Books[0].hint_3}</div>
-                  )}
+          {lives > 0 &&
+            !isCorrect &&
+            data.Books[0].blurred_cover &&
+            localStorage.getItem("denyAccess") === null && (
+              <div className="guess-container">
+                <h2>Can you guess this book?</h2>
+                <span style={{ fontSize: "22px" }}>
+                  Title: {data.Books[0].title.split(" ").length} Words
+                </span>
+                <br />
+                <AutocompleteSearchBox
+                  isSelected={isSelected}
+                  setIsSelected={setIsSelected}
+                  inputValue={inputValue}
+                  setInputValue={setInputValue}
+                />
+                <br />
+                <button className="submit-button" onClick={handleSubmit}>
+                  SUBMIT
+                </button>
+                <br />
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      marginTop: "10%",
+                      width: "350px",
+                    }}
+                  >
+                    {showHint >= 1 && (
+                      <div className="left-hint">{data.Books[0].hint_1}</div>
+                    )}
+                    {showHint >= 3 && (
+                      <div className="left-hint">{data.Books[0].hint_3}</div>
+                    )}
+                  </div>
+                  <div>
+                    <img
+                      alt="book cover"
+                      className="no-blur"
+                      src={data.Books[0].blurred_cover}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      marginTop: "10%",
+                      width: "350px",
+                    }}
+                  >
+                    {showHint >= 2 && (
+                      <div className="right-hint">
+                        {data.Books[0].hint_2}. It was released in{" "}
+                        {data.Books[0].release_year}
+                      </div>
+                    )}
+                    {showHint >= 4 && (
+                      <div className="right-hint">
+                        It was written by {data.Books[0].author}
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <img
-                    alt="book cover"
-                    className="no-blur"
-                    src={data.Books[0].blurred_cover}
-                  />
+                <div style={{ marginTop: "15px" }}>
+                  {[...Array(lives)].map((_, i) => (
+                    <FavoriteIcon sx={{ color: "red", fontSize: "30px" }} />
+                  ))}
+                  {screenShake && <span className="falling-number">-1</span>}
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
-                  {showHint >= 2 && (
-                    <div className="right-hint">
-                      {data.Books[0].hint_2}. It was released in{" "}
-                      {data.Books[0].release_year}
-                    </div>
-                  )}
-                  {showHint >= 4 && (
-                    <div className="right-hint">
-                      It was written by {data.Books[0].author}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div style={{ marginTop: "15px" }}>
-                {[...Array(lives)].map((_, i) => (
-                  <FavoriteIcon sx={{ color: "red", fontSize: "30px" }} />
-                ))}
-                {screenShake && <span className="falling-number">-1</span>}
-              </div>
-              {/* <div className="hint-container">
+                {/* <div className="hint-container">
                 {showHint >= 1 && (
                   <div className="hint">Hint: {data.Books[0].hint_1}</div>
                 )}
@@ -283,47 +291,50 @@ function App(): JSX.Element {
                   </div>
                 )}
               </div> */}
-            </div>
-          )}
-          {lives > 0 && isCorrect && data.Books[0].book_cover && (
-            <div className="guess-container">
-              <Confetti
-                width={windowDimension.width}
-                height={windowDimension.height}
-              />
-              <h2>You got it!</h2>
-              <h2>
-                The correct answer was{" "}
-                <span style={{ color: "green" }}>{data.Books[0].title}</span> by{" "}
-                {data.Books[0].author}!
-              </h2>
-              <div style={{ display: "flex" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
+              </div>
+            )}
+          {lives > 0 &&
+            isCorrect &&
+            data.Books[0].book_cover &&
+            localStorage.getItem("denyAccess") === null && (
+              <div className="guess-container">
+                <Confetti
+                  width={windowDimension.width}
+                  height={windowDimension.height}
+                />
+                <h2>You got it!</h2>
+                <h2>
+                  The correct answer was{" "}
+                  <span style={{ color: "green" }}>{data.Books[0].title}</span>{" "}
+                  by {data.Books[0].author}!
+                </h2>
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      marginTop: "10%",
+                      width: "350px",
+                    }}
+                  >
                     <div className="left-hint">{data.Books[0].hint_1}</div>
                     <div className="left-hint">{data.Books[0].hint_3}</div>
-                </div>
-                <div>
-                  <img
-                    alt="book cover"
-                    className="no-blur"
-                    src={data.Books[0].book_cover}
-                  />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
+                  </div>
+                  <div>
+                    <img
+                      alt="book cover"
+                      className="no-blur"
+                      src={data.Books[0].book_cover}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      marginTop: "10%",
+                      width: "350px",
+                    }}
+                  >
                     <div className="right-hint">
                       {data.Books[0].hint_2}. It was released in{" "}
                       {data.Books[0].release_year}
@@ -331,12 +342,12 @@ function App(): JSX.Element {
                     <div className="right-hint">
                       It was written by {data.Books[0].author}
                     </div>
+                  </div>
                 </div>
+                <h3 style={{ width: "50%" }}>{data.Books[0].description}</h3>
               </div>
-              <h3 style={{width: "50%"}}>{data.Books[0].description}</h3>
-            </div>
-          )}
-          {lives === 0 && (
+            )}
+          {lives === 0 && localStorage.getItem("denyAccess") === null && (
             <div className="guess-container">
               <h2>Too bad! You didn't get the book right!</h2>
               <h2>
@@ -353,8 +364,8 @@ function App(): JSX.Element {
                     width: "350px",
                   }}
                 >
-                    <div className="left-hint">{data.Books[0].hint_1}</div>
-                    <div className="left-hint">{data.Books[0].hint_3}</div>
+                  <div className="left-hint">{data.Books[0].hint_1}</div>
+                  <div className="left-hint">{data.Books[0].hint_3}</div>
                 </div>
                 <div>
                   <img
@@ -371,13 +382,122 @@ function App(): JSX.Element {
                     width: "350px",
                   }}
                 >
-                    <div className="right-hint">
-                      {data.Books[0].hint_2}. It was released in{" "}
-                      {data.Books[0].release_year}
-                    </div>
-                    <div className="right-hint">
-                      It was written by {data.Books[0].author}
-                    </div>
+                  <div className="right-hint">
+                    {data.Books[0].hint_2}. It was released in{" "}
+                    {data.Books[0].release_year}
+                  </div>
+                  <div className="right-hint">
+                    It was written by {data.Books[0].author}
+                  </div>
+                </div>
+              </div>
+              <p style={{ width: "50%" }}>{data.Books[0].description}</p>
+            </div>
+          )}
+          {localStorage.getItem("denyAccess") === "true" && (
+            <div className="guess-container">
+              <h2 style={{ marginBottom: "-20px" }}>You got it!</h2>
+              <h2>
+                The correct answer was{" "}
+                <span style={{ color: "green" }}>{data.Books[0].title}</span> by{" "}
+                {data.Books[0].author}!
+                <br />
+                Come back tomorrow for a new challenge!
+              </h2>
+              {localStorage.getItem("guesses") === "0" && (
+                <span>You needed no hints you book worm, nice job!</span>
+              )}
+              {localStorage.getItem("guesses") !== "0" && (
+                <span>
+                  You got it in {localStorage.getItem("guesses")} guesses.
+                </span>
+              )}
+              <br />
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                  <div className="left-hint">{data.Books[0].hint_1}</div>
+                  <div className="left-hint">{data.Books[0].hint_3}</div>
+                </div>
+                <div>
+                  <img
+                    alt="book cover"
+                    className="no-blur"
+                    src={data.Books[0].book_cover}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                  <div className="right-hint">
+                    {data.Books[0].hint_2}. It was released in{" "}
+                    {data.Books[0].release_year}
+                  </div>
+                  <div className="right-hint">
+                    It was written by {data.Books[0].author}
+                  </div>
+                </div>
+              </div>
+              <h3 style={{ width: "50%" }}>{data.Books[0].description}</h3>
+            </div>
+          )}
+          {localStorage.getItem("hasWon") === "false" && (
+            <div className="guess-container">
+              <h2>
+                You didn't get the answer today
+                <br />
+                Come back again tomorrow to try a new challenge!
+              </h2>
+              <h2>
+                The correct answer was{" "}
+                <span style={{ color: "red" }}>{data.Books[0].title}</span> by{" "}
+                {data.Books[0].author}
+              </h2>
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                  <div className="left-hint">{data.Books[0].hint_1}</div>
+                  <div className="left-hint">{data.Books[0].hint_3}</div>
+                </div>
+                <div>
+                  <img
+                    alt="book cover"
+                    className="no-blur"
+                    src={data.Books[0].book_cover}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                  <div className="right-hint">
+                    {data.Books[0].hint_2}. It was released in{" "}
+                    {data.Books[0].release_year}
+                  </div>
+                  <div className="right-hint">
+                    It was written by {data.Books[0].author}
+                  </div>
                 </div>
               </div>
               <p style={{ width: "50%" }}>{data.Books[0].description}</p>
