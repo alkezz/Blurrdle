@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import "./App.css";
 import data from "./BookData/bookData.json";
 import AutocompleteSearchBox from "./AutoComplete/AutoCompleteSearchBox";
@@ -10,6 +12,8 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import Confetti from "react-confetti";
+import socketIOClient from "socket.io-client";
+import * as dataActions from "./store/UpdateBook";
 import { v4 as uuidv4 } from "uuid";
 
 function App(): JSX.Element {
@@ -17,7 +21,12 @@ function App(): JSX.Element {
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.data);
+  console.log(data, "DATA");
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
+  const [book, setBook] = useState({});
+  const [time, setTime] = useState<number>();
   const [inputValue, setInputValue] = useState<string>("");
   const [hasWon, setHasWon] = useState<boolean | null>(null);
   const [userGuess, setUserGuess] = useState<string>();
@@ -28,7 +37,6 @@ function App(): JSX.Element {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const [isHintOneVisible, setIsHintOneVisible] = useState<boolean>(false);
   const [isHintTwoVisible, setIsHintTwoVisible] = useState<boolean>(false);
-
   const detectSize = (): void => {
     setWindowDimension({
       width: window.innerWidth,
@@ -41,11 +49,21 @@ function App(): JSX.Element {
   //   localStorage.setItem("player_id", uuidv4());
   // }
   useEffect(() => {
+    const socket = socketIOClient("http://localhost:8000");
+    socket.on("connect", () => {
+      console.log("SOCKET READY ");
+    });
+    socket.on("dataReady", (data) => {
+      dispatch(dataActions.updateData(data));
+    });
+  }, [dispatch]);
+  useEffect(() => {
     const localStorageWinStatus = localStorage.getItem("hasWon");
     if (localStorageWinStatus === "true") setHasWon(true);
     if (localStorageWinStatus === "false") setHasWon(false);
     if (!localStorage.getItem("player_id")) {
       localStorage.setItem("player_id", uuidv4());
+      setOpen(true);
     }
   }, []);
   useEffect(() => {
@@ -67,7 +85,7 @@ function App(): JSX.Element {
   const handleSubmit = (): void => {
     if (
       inputValue &&
-      inputValue.toLowerCase() === data.Books[0].title.toLowerCase()
+      inputValue.toLowerCase() === data.book.title.toLowerCase()
     ) {
       handleWin();
     } else if (lives > 1) {
@@ -195,21 +213,15 @@ function App(): JSX.Element {
         </Modal>
       </div>
       <div className="abc">
+        {time}
         <div className="full-page-container">
-          <h1>
-            Welcome to Bookle! &nbsp;
-            <Tooltip arrow title="More info">
-              <InfoIcon onClick={handleModal} sx={{ cursor: "pointer" }} />
-            </Tooltip>
-          </h1>
           {lives > 0 &&
             !isCorrect &&
-            data.Books[0].blurred_cover &&
+            data.book.blurred_cover &&
             hasWon === null && (
               <div className="guess-container">
-                <h2>Can you guess this book?</h2>
                 <span style={{ fontSize: "22px" }}>
-                  Title: {data.Books[0].title.split(" ").length} Words
+                  Title: {data.book.title.split(" ").length} Words
                 </span>
                 <br />
                 <AutocompleteSearchBox
@@ -223,6 +235,7 @@ function App(): JSX.Element {
                   SUBMIT
                 </button>
                 <br />
+                <h2>Can you guess this book?</h2>
                 <div style={{ display: "flex" }}>
                   <div
                     style={{
@@ -233,17 +246,17 @@ function App(): JSX.Element {
                     }}
                   >
                     {showHint >= 1 && (
-                      <div className="left-hint">{data.Books[0].hint_1}</div>
+                      <div className="left-hint">{data.book.hint_1}</div>
                     )}
                     {showHint >= 3 && (
-                      <div className="left-hint">{data.Books[0].hint_3}</div>
+                      <div className="left-hint">{data.book.hint_3}</div>
                     )}
                   </div>
                   <div>
                     <img
                       alt="book cover"
                       className="no-blur"
-                      src={data.Books[0].blurred_cover}
+                      src={data.book.blurred_cover}
                     />
                   </div>
                   <div
@@ -256,13 +269,13 @@ function App(): JSX.Element {
                   >
                     {showHint >= 2 && (
                       <div className="right-hint">
-                        {data.Books[0].hint_2}. It was released in{" "}
-                        {data.Books[0].release_year}
+                        {data.book.hint_2}. It was released in{" "}
+                        {data.book.release_year}
                       </div>
                     )}
                     {showHint >= 4 && (
                       <div className="right-hint">
-                        It was written by {data.Books[0].author}
+                        It was written by {data.book.author}
                       </div>
                     )}
                   </div>
