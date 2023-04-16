@@ -35,15 +35,19 @@ function App(): JSX.Element {
       height: window.innerHeight,
     });
   };
-  if (
-    localStorage.getItem("hasWon") === "true" ||
-    localStorage.getItem("hasWon") === "false"
-  ) {
-    localStorage.setItem("denyAccess", "true");
-  }
-  if (!localStorage.getItem("player_id")) {
-    localStorage.setItem("player_id", uuidv4());
-  }
+  // const localStorageWinStatus = localStorage.getItem("hasWon");
+  // if (localStorageWinStatus === "true") setIsCorrect(true);
+  // if (!localStorage.getItem("player_id")) {
+  //   localStorage.setItem("player_id", uuidv4());
+  // }
+  useEffect(() => {
+    const localStorageWinStatus = localStorage.getItem("hasWon");
+    if (localStorageWinStatus === "true") setHasWon(true);
+    if (localStorageWinStatus === "false") setHasWon(false);
+    if (!localStorage.getItem("player_id")) {
+      localStorage.setItem("player_id", uuidv4());
+    }
+  }, []);
   useEffect(() => {
     window.addEventListener("resize", detectSize);
     return () => {
@@ -60,7 +64,6 @@ function App(): JSX.Element {
   const handleLoss = (): void => {
     localStorage.setItem("hasWon", "false");
   };
-  console.log("LOCAL", lives);
   const handleSubmit = (): void => {
     if (
       inputValue &&
@@ -95,8 +98,6 @@ function App(): JSX.Element {
       document.body.className = "";
     }
   }, [screenShake]);
-  console.log("ISVISBLE", isHintOneVisible, isHintTwoVisible);
-  if (!data.Books[0]) return null;
   return (
     <>
       <div className="modal-container">
@@ -204,7 +205,7 @@ function App(): JSX.Element {
           {lives > 0 &&
             !isCorrect &&
             data.Books[0].blurred_cover &&
-            localStorage.getItem("denyAccess") === null && (
+            hasWon === null && (
               <div className="guess-container">
                 <h2>Can you guess this book?</h2>
                 <span style={{ fontSize: "22px" }}>
@@ -272,31 +273,12 @@ function App(): JSX.Element {
                   ))}
                   {screenShake && <span className="falling-number">-1</span>}
                 </div>
-                {/* <div className="hint-container">
-                {showHint >= 1 && (
-                  <div className="hint">Hint: {data.Books[0].hint_1}</div>
-                )}
-                {showHint >= 2 && (
-                  <div className="hint">
-                    Hint: {data.Books[0].hint_2}. It was released in{" "}
-                    {data.Books[0].release_year}
-                  </div>
-                )}
-                {showHint >= 3 && (
-                  <div className="hint">Hint: {data.Books[0].hint_3}</div>
-                )}
-                {showHint >= 4 && (
-                  <div className="hint">
-                    Hint: It was written by {data.Books[0].author}
-                  </div>
-                )}
-              </div> */}
               </div>
             )}
           {lives > 0 &&
             isCorrect &&
             data.Books[0].book_cover &&
-            localStorage.getItem("denyAccess") === null && (
+            hasWon === null && (
               <div className="guess-container">
                 <Confetti
                   width={windowDimension.width}
@@ -347,7 +329,7 @@ function App(): JSX.Element {
                 <h3 style={{ width: "50%" }}>{data.Books[0].description}</h3>
               </div>
             )}
-          {lives === 0 && localStorage.getItem("denyAccess") === null && (
+          {lives === 0 && hasWon === null && (
             <div className="guess-container">
               <h2>Too bad! You didn't get the book right!</h2>
               <h2>
@@ -394,7 +376,7 @@ function App(): JSX.Element {
               <p style={{ width: "50%" }}>{data.Books[0].description}</p>
             </div>
           )}
-          {localStorage.getItem("denyAccess") === "true" && (
+          {hasWon && (
             <div className="guess-container">
               <h2 style={{ marginBottom: "-20px" }}>You got it!</h2>
               <h2>
@@ -452,7 +434,7 @@ function App(): JSX.Element {
               <h3 style={{ width: "50%" }}>{data.Books[0].description}</h3>
             </div>
           )}
-          {localStorage.getItem("hasWon") === "false" && (
+          {hasWon === false && (
             <div className="guess-container">
               <h2>
                 You didn't get the answer today
