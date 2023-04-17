@@ -34,7 +34,6 @@ cron.schedule('* * * * *', () => {
             const bookObj = JSON.parse(data.Body.toString());
             shuffleArrayInPlace(bookObj.Books) // Randomize the book array
             let selectedBook = bookObj.Books.shift() // Select and remove the first book object
-            console.log("SELECTEDBOOK", selectedBook)
             wss.on('connection', (socket) => { // Connecting to WebSocket
                 console.log('WebSocket client connected');
                 // Creating an obj to send consisting of the book and time remaining before the next book
@@ -58,7 +57,7 @@ cron.schedule('* * * * *', () => {
                                 }
                             } else {
                                 scores[playerId] = {
-                                    bestGuess: attempts > this.bestGuess ? attempts : this.bestGuess,
+                                    bestGuess: attempts > 0 && attempts > this.bestGuess ? attempts : this.bestGuess,
                                     best_time: best_time > this.best_time ? best_time : this.best_time,
                                     firstTry: firstTry ? this.firstTry++ : this.firstTry
                                 }
