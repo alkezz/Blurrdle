@@ -114,7 +114,7 @@ s3.putObject(
 );
 ```
 
-## Full Backend Cron Schedule Code
+## Full Back end Cron Schedule Code
 
 ```
 cron.schedule('* * * * *', () => {
