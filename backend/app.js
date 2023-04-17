@@ -6,7 +6,7 @@ const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const app = express();
-const PORT = 8000; // or any port number you prefer
+const PORT = 8000;
 function shuffleArrayInPlace(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -24,9 +24,9 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 // AWS S3 configuration
 const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Replace with your AWS access key
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, // Replace with your AWS secret access key
-    region: 'us-east-1', // Replace with your AWS region
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: 'us-east-1'
 });
 cron.schedule('* * * * *', () => {
     console.log("IN CRON")
@@ -37,36 +37,40 @@ cron.schedule('* * * * *', () => {
         } else {
             // Extract data from JSON file
             const bookObj = JSON.parse(data.Body.toString());
-            shuffleArrayInPlace(bookObj.Books) // Select and remove the first book object
-            let selectedBook = bookObj.Books.shift()
+            shuffleArrayInPlace(bookObj.Books) // Randomize the book array
+            let selectedBook = bookObj.Books.shift() // Select and remove the first book object
             console.log("SELECTEDBOOK", selectedBook)
-            wss.on('connection', (socket) => {
+            wss.on('connection', (socket) => { // Connecting to WebSocket
                 console.log('WebSocket client connected');
+                // Creating an obj to send consisting of the book and time remaining before the next book
                 const objToSend = { book: selectedBook, timeRemaining: 60 };
+                // Sending the book selected from above to send to the front end
                 socket.send(JSON.stringify(objToSend));
 
                 // Set up a message event listener for the WebSocket client
                 socket.on('message', (message) => {
-                    console.log(`Received message: ${message}`);
-
-                    // Send a response to the WebSocket client
-                });
-                socket.on('message', (message) => {
                     try {
                         const data = JSON.parse(message);
-                        const { type, playerId, score } = data;
+                        const { type, playerId, attempts, time, firstTry } = data;
 
                         if (type === 'updateScore') {
                             // Update the player's score in the dictionary
                             if (!scores[playerId]) {
-                                scores[playerId] = score
+                                scores[playerId] = {
+                                    bestGuess: attempts,
+                                    best_time: time,
+                                    firstTry: 0
+                                }
                             } else {
-                                scores[playerId] += score;
+                                scores[playerId] = {
+                                    bestGuess: attempts > this.bestGuess ? attempts : this.bestGuess,
+                                    best_time: best_time > this.best_time ? best_time : this.best_time,
+                                    firstTry: firstTry ? this.firstTry++ : this.firstTry
+                                }
                             }
-                            console.log(`Player ID: ${playerId}, Score: ${score}`);
 
                             // Send the updated score only to the corresponding client
-                            socket.send(JSON.stringify({ type: 'scoreUpdated', score }));
+                            socket.send(JSON.stringify({ type: 'score', scores: scores[playerId] }));
                         }
 
                     } catch (error) {
@@ -80,8 +84,8 @@ cron.schedule('* * * * *', () => {
             });
             s3.putObject(
                 {
-                    Bucket: process.env.AWS_BUCKET_NAME, // Replace with your bucket name
-                    Key: 'bookData.json', // Replace with your JSON file key
+                    Bucket: process.env.AWS_BUCKET_NAME,
+                    Key: 'bookData.json',
                     Body: JSON.stringify(bookObj), // Convert the updated array of book objects back to JSON string
                 },
                 (err) => {

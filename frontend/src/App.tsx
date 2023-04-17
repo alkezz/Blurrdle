@@ -23,6 +23,7 @@ function App(): JSX.Element {
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const [scores, setScores] = useState<object>({})
   const dispatch = useDispatch();
   // const data = useSelector((state) => state.data);
   // console.log(data, "DATA");
@@ -61,11 +62,12 @@ function App(): JSX.Element {
   // }, [dispatch]);
   useEffect(() => {
     if (lastMessage !== null) {
-      const { book, timeRemaining } = JSON.parse(lastMessage.data);
-      setBook(book);
-      setTime(timeRemaining);
+      const { book, timeRemaining, type, scores } = JSON.parse(lastMessage.data);
+      if(book) setBook(book);
+      if(timeRemaining) setTime(timeRemaining);
+      if(scores) setScores({})
     }
-  }, [lastMessage]);
+  }, [lastMessage, book, setTime, setBook, time, setScores]);
   useEffect(() => {
     const localStorageWinStatus = localStorage.getItem("hasWon");
     if (localStorageWinStatus === "true") setHasWon(true);
