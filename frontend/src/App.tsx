@@ -23,7 +23,7 @@ function App(): JSX.Element {
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  const [scores, setScores] = useState<object>({})
+  const [scores, setScores] = useState<object>({});
   const dispatch = useDispatch();
   // const data = useSelector((state) => state.data);
   // console.log(data, "DATA");
@@ -62,10 +62,12 @@ function App(): JSX.Element {
   // }, [dispatch]);
   useEffect(() => {
     if (lastMessage !== null) {
-      const { book, timeRemaining, type, scores } = JSON.parse(lastMessage.data);
-      if(book) setBook(book);
-      if(timeRemaining) setTime(timeRemaining);
-      if(scores) setScores({})
+      const { book, timeRemaining, type, scores } = JSON.parse(
+        lastMessage.data
+      );
+      if (book) setBook(book);
+      if (timeRemaining) setTime(timeRemaining);
+      if (scores) setScores(scores);
     }
   }, [lastMessage, book, setTime, setBook, time, setScores]);
   useEffect(() => {
