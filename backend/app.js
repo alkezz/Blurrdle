@@ -23,6 +23,38 @@ const s3 = new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     region: 'us-east-1'
 });
+wss.on('connection', (socket) => {
+    socket.on('message', (message) => {
+        try {
+            const data = JSON.parse(message);
+            const { type, playerId, attempts, time, firstTry } = data;
+
+            if (type === 'updateScore') {
+                // Update the player's score in the dictionary
+                if (!scores[playerId]) {
+                    scores[playerId] = {
+                        bestGuess: attempts,
+                        bestTime: time,
+                        firstTry: 0
+                    }
+                } else {
+                    scores[playerId] = {
+                        bestGuess: attempts > 0 && attempts > this.bestGuess ? attempts : this.bestGuess,
+                        bestTime: best_time > this.best_time ? best_time : this.best_time,
+                        firstTry: firstTry ? this.firstTry++ : this.firstTry
+                    }
+                }
+
+                // Send the updated score only to the corresponding client
+                socket.send(JSON.stringify({ type: 'score', scores: scores[playerId] }));
+                console.log(scores[playerId], "SCORES")
+            }
+
+        } catch (error) {
+            console.error('Error parsing message:', error);
+        }
+    })
+})
 cron.schedule('* * * * *', () => {
     console.log("IN CRON")
     // Read JSON file from S3
@@ -41,36 +73,6 @@ cron.schedule('* * * * *', () => {
                 // Sending the book selected from above to send to the front end
                 socket.send(JSON.stringify(objToSend));
 
-                // Set up a message event listener for the WebSocket client
-                socket.on('message', (message) => {
-                    try {
-                        const data = JSON.parse(message);
-                        const { type, playerId, attempts, time, firstTry } = data;
-
-                        if (type === 'updateScore') {
-                            // Update the player's score in the dictionary
-                            if (!scores[playerId]) {
-                                scores[playerId] = {
-                                    bestGuess: attempts,
-                                    best_time: time,
-                                    firstTry: 0
-                                }
-                            } else {
-                                scores[playerId] = {
-                                    bestGuess: attempts > 0 && attempts > this.bestGuess ? attempts : this.bestGuess,
-                                    best_time: best_time > this.best_time ? best_time : this.best_time,
-                                    firstTry: firstTry ? this.firstTry++ : this.firstTry
-                                }
-                            }
-
-                            // Send the updated score only to the corresponding client
-                            socket.send(JSON.stringify({ type: 'score', scores: scores[playerId] }));
-                        }
-
-                    } catch (error) {
-                        console.error('Error parsing message:', error);
-                    }
-                })
                 // Set up a close event listener for the WebSocket client
                 socket.on('close', () => {
                     console.log('WebSocket client disconnected');

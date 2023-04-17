@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from "uuid";
 
 function App(): JSX.Element {
   const { lastMessage } = useWebSocket("ws://localhost:8000");
+  const { sendJsonMessage } = useWebSocket("ws://localhost:8000");
   const [windowDimension, setWindowDimension] = useState<object>({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -69,7 +70,8 @@ function App(): JSX.Element {
       if (timeRemaining) setTime(timeRemaining);
       if (scores) setScores(scores);
     }
-  }, [lastMessage, book, setTime, setBook, time, setScores]);
+  }, [lastMessage]);
+  console.log(scores);
   useEffect(() => {
     const localStorageWinStatus = localStorage.getItem("hasWon");
     if (localStorageWinStatus === "true") setHasWon(true);
@@ -91,7 +93,6 @@ function App(): JSX.Element {
     localStorage.setItem("hasWon", "true");
     const guesses = 5 - lives;
     localStorage.setItem("guesses", guesses.toString());
-    const { sendJsonMessage } = useWebSocket("ws://localhost:8080");
     sendJsonMessage({
       type: "updateScore",
       playerId: localStorage.getItem("player_id"),
@@ -100,7 +101,6 @@ function App(): JSX.Element {
   };
   const handleLoss = (): void => {
     localStorage.setItem("hasWon", "false");
-    const { sendJsonMessage } = useWebSocket("ws://localhost:8080");
     sendJsonMessage({
       type: "updateScore",
       playerId: localStorage.getItem("player_id"),
@@ -151,10 +151,10 @@ function App(): JSX.Element {
           }}
         >
           <div className="modal-content">
-            <p>👋 Hello! My name is Ali Ezzeddine and welcome to Bookle!</p>
+            <p>👋 Hello! My name is Ali Ezzeddine and welcome to Blurzzle!</p>
             <p>
-              Bookle is a mash-up between the beloved game "Wordle" and all the
-              other "dle" games like{" "}
+              Blurzzle is a mash-up between the beloved game "Wordle" and all
+              the other "dle" games like{" "}
               <a
                 rel="noreferrer"
                 href="https://globle-game.com/"
@@ -235,7 +235,7 @@ function App(): JSX.Element {
         </Modal>
       </div>
       <div className="abc">
-        {time}
+        {/* <button onClick={handleModal}>y</button> */}
         <div className="full-page-container">
           {lives > 0 &&
             !isCorrect &&
