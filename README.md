@@ -67,6 +67,7 @@ As mentioned in my "Limitations" a database will be implemented in the near futu
 }
 ```
 We then select the first book from the randomized array by using `Array.shift()` which will extract the book data as well as removing it from my JSON file that I send back
+
 The WebSocket then connects to my application and sends the selected book and time remaining to my front end React App.
 `const objToSend = { book: selectedBook, timeRemaining: 60 };` `socket.send(JSON.stringify(objToSend));`
 
