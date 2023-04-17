@@ -19,6 +19,7 @@ function shuffleArrayInPlace(array) {
 //     organization: "org-8hYIA14gBw6bAOKbZrFDeBtQ",
 //     apiKey: process.env.OPENAI_API_KEY,
 // });
+const scores = {};
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 // AWS S3 configuration
@@ -39,7 +40,6 @@ cron.schedule('* * * * *', () => {
             shuffleArrayInPlace(bookObj.Books) // Select and remove the first book object
             let selectedBook = bookObj.Books.shift()
             console.log("SELECTEDBOOK", selectedBook)
-            // Emit event with extracted data and time remaining to WebSocket clients
             wss.on('connection', (socket) => {
                 console.log('WebSocket client connected');
                 const objToSend = { book: selectedBook, timeRemaining: 60 };
@@ -51,7 +51,28 @@ cron.schedule('* * * * *', () => {
 
                     // Send a response to the WebSocket client
                 });
+                socket.on('message', (message) => {
+                    try {
+                        const data = JSON.parse(message);
+                        const { type, playerId, score } = data;
 
+                        if (type === 'updateScore') {
+                            // Update the player's score in the dictionary
+                            if (!scores[playerId]) {
+                                scores[playerId] = score
+                            } else {
+                                scores[playerId] += score;
+                            }
+                            console.log(`Player ID: ${playerId}, Score: ${score}`);
+
+                            // Send the updated score only to the corresponding client
+                            socket.send(JSON.stringify({ type: 'scoreUpdated', score }));
+                        }
+
+                    } catch (error) {
+                        console.error('Error parsing message:', error);
+                    }
+                })
                 // Set up a close event listener for the WebSocket client
                 socket.on('close', () => {
                     console.log('WebSocket client disconnected');

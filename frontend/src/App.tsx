@@ -45,8 +45,6 @@ function App(): JSX.Element {
       height: window.innerHeight,
     });
   };
-  console.log("BOOK", book);
-  console.log(time);
   // const localStorageWinStatus = localStorage.getItem("hasWon");
   // if (localStorageWinStatus === "true") setIsCorrect(true);
   // if (!localStorage.getItem("player_id")) {
@@ -89,15 +87,24 @@ function App(): JSX.Element {
     localStorage.setItem("hasWon", "true");
     const guesses = 5 - lives;
     localStorage.setItem("guesses", guesses.toString());
+    const { sendJsonMessage } = useWebSocket("ws://localhost:8080");
+    sendJsonMessage({
+      type: "updateScore",
+      playerId: localStorage.getItem("player_id"),
+      score: guesses,
+    });
   };
   const handleLoss = (): void => {
     localStorage.setItem("hasWon", "false");
+    const { sendJsonMessage } = useWebSocket("ws://localhost:8080");
+    sendJsonMessage({
+      type: "updateScore",
+      playerId: localStorage.getItem("player_id"),
+      score: 0,
+    });
   };
   const handleSubmit = (): void => {
-    if (
-      inputValue &&
-      inputValue.toLowerCase() === data.book.title.toLowerCase()
-    ) {
+    if (inputValue && inputValue.toLowerCase() === book?.title.toLowerCase()) {
       handleWin();
     } else if (lives > 1) {
       setLives(lives - 1);
@@ -232,7 +239,7 @@ function App(): JSX.Element {
             hasWon === null && (
               <div className="guess-container">
                 <span style={{ fontSize: "22px" }}>
-                  Title: {book.title.split(" ").length} Words
+                  Title: {book?.title.split(" ").length} Words
                 </span>
                 <br />
                 <AutocompleteSearchBox
@@ -298,67 +305,17 @@ function App(): JSX.Element {
                 </div>
               </div>
             )}
-          {lives > 0 &&
-            isCorrect &&
-            data.Books[0].book_cover &&
-            hasWon === null && (
-              <div className="guess-container">
-                <Confetti
-                  width={windowDimension.width}
-                  height={windowDimension.height}
-                />
-                <h2>You got it!</h2>
-                <h2>
-                  The correct answer was{" "}
-                  <span style={{ color: "green" }}>{data.Books[0].title}</span>{" "}
-                  by {data.Books[0].author}!
-                </h2>
-                <div style={{ display: "flex" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      marginTop: "10%",
-                      width: "350px",
-                    }}
-                  >
-                    <div className="left-hint">{data.Books[0].hint_1}</div>
-                    <div className="left-hint">{data.Books[0].hint_3}</div>
-                  </div>
-                  <div>
-                    <img
-                      alt="book cover"
-                      className="no-blur"
-                      src={data.Books[0].book_cover}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      marginTop: "10%",
-                      width: "350px",
-                    }}
-                  >
-                    <div className="right-hint">
-                      {data.Books[0].hint_2}. It was released in{" "}
-                      {data.Books[0].release_year}
-                    </div>
-                    <div className="right-hint">
-                      It was written by {data.Books[0].author}
-                    </div>
-                  </div>
-                </div>
-                <h3 style={{ width: "50%" }}>{data.Books[0].description}</h3>
-              </div>
-            )}
-          {lives === 0 && hasWon === null && (
+          {lives > 0 && isCorrect && book?.book_cover && hasWon === null && (
             <div className="guess-container">
-              <h2>Too bad! You didn't get the book right!</h2>
+              <Confetti
+                width={windowDimension.width}
+                height={windowDimension.height}
+              />
+              <h2>You got it!</h2>
               <h2>
                 The correct answer was{" "}
-                <span style={{ color: "red" }}>{data.Books[0].title}</span> by{" "}
-                {data.Books[0].author}
+                <span style={{ color: "green" }}>{book?.title}</span> by{" "}
+                {book?.author}!
               </h2>
               <div style={{ display: "flex" }}>
                 <div
@@ -369,14 +326,14 @@ function App(): JSX.Element {
                     width: "350px",
                   }}
                 >
-                  <div className="left-hint">{data.Books[0].hint_1}</div>
-                  <div className="left-hint">{data.Books[0].hint_3}</div>
+                  <div className="left-hint">{book?.hint_1}</div>
+                  <div className="left-hint">{book?.hint_3}</div>
                 </div>
                 <div>
                   <img
                     alt="book cover"
                     className="no-blur"
-                    src={data.Books[0].book_cover}
+                    src={book?.book_cover}
                   />
                 </div>
                 <div
@@ -388,15 +345,60 @@ function App(): JSX.Element {
                   }}
                 >
                   <div className="right-hint">
-                    {data.Books[0].hint_2}. It was released in{" "}
-                    {data.Books[0].release_year}
+                    {book?.hint_2}. It was released in {book?.release_year}
                   </div>
                   <div className="right-hint">
-                    It was written by {data.Books[0].author}
+                    It was written by {book?.author}
                   </div>
                 </div>
               </div>
-              <p style={{ width: "50%" }}>{data.Books[0].description}</p>
+              <h3 style={{ width: "50%" }}>{book?.description}</h3>
+            </div>
+          )}
+          {lives === 0 && hasWon === null && (
+            <div className="guess-container">
+              <h2>Too bad! You didn't get the book right!</h2>
+              <h2>
+                The correct answer was{" "}
+                <span style={{ color: "red" }}>{book?.title}</span> by{" "}
+                {book?.author}
+              </h2>
+              <div style={{ display: "flex" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                  <div className="left-hint">{book?.hint_1}</div>
+                  <div className="left-hint">{book?.hint_3}</div>
+                </div>
+                <div>
+                  <img
+                    alt="book cover"
+                    className="no-blur"
+                    src={book?.book_cover}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    marginTop: "10%",
+                    width: "350px",
+                  }}
+                >
+                  <div className="right-hint">
+                    {book?.hint_2}. It was released in {book?.release_year}
+                  </div>
+                  <div className="right-hint">
+                    It was written by {book?.author}
+                  </div>
+                </div>
+              </div>
+              <p style={{ width: "50%" }}>{book?.description}</p>
             </div>
           )}
           {hasWon && (
@@ -404,8 +406,8 @@ function App(): JSX.Element {
               <h2 style={{ marginBottom: "-20px" }}>You got it!</h2>
               <h2>
                 The correct answer was{" "}
-                <span style={{ color: "green" }}>{data.Books[0].title}</span> by{" "}
-                {data.Books[0].author}!
+                <span style={{ color: "green" }}>{book?.title}</span> by{" "}
+                {book?.author}!
                 <br />
                 Come back tomorrow for a new challenge!
               </h2>
@@ -427,14 +429,14 @@ function App(): JSX.Element {
                     width: "350px",
                   }}
                 >
-                  <div className="left-hint">{data.Books[0].hint_1}</div>
-                  <div className="left-hint">{data.Books[0].hint_3}</div>
+                  <div className="left-hint">{book?.hint_1}</div>
+                  <div className="left-hint">{book?.hint_3}</div>
                 </div>
                 <div>
                   <img
                     alt="book cover"
                     className="no-blur"
-                    src={data.Books[0].book_cover}
+                    src={book?.book_cover}
                   />
                 </div>
                 <div
@@ -446,15 +448,14 @@ function App(): JSX.Element {
                   }}
                 >
                   <div className="right-hint">
-                    {data.Books[0].hint_2}. It was released in{" "}
-                    {data.Books[0].release_year}
+                    {book?.hint_2}. It was released in {book?.release_year}
                   </div>
                   <div className="right-hint">
-                    It was written by {data.Books[0].author}
+                    It was written by {book?.author}
                   </div>
                 </div>
               </div>
-              <h3 style={{ width: "50%" }}>{data.Books[0].description}</h3>
+              <h3 style={{ width: "50%" }}>{book?.description}</h3>
             </div>
           )}
           {hasWon === false && (
@@ -466,8 +467,8 @@ function App(): JSX.Element {
               </h2>
               <h2>
                 The correct answer was{" "}
-                <span style={{ color: "red" }}>{data.Books[0].title}</span> by{" "}
-                {data.Books[0].author}
+                <span style={{ color: "red" }}>{book?.title}</span> by{" "}
+                {book?.author}
               </h2>
               <div style={{ display: "flex" }}>
                 <div
@@ -478,14 +479,14 @@ function App(): JSX.Element {
                     width: "350px",
                   }}
                 >
-                  <div className="left-hint">{data.Books[0].hint_1}</div>
-                  <div className="left-hint">{data.Books[0].hint_3}</div>
+                  <div className="left-hint">{book?.hint_1}</div>
+                  <div className="left-hint">{book?.hint_3}</div>
                 </div>
                 <div>
                   <img
                     alt="book cover"
                     className="no-blur"
-                    src={data.Books[0].book_cover}
+                    src={book?.book_cover}
                   />
                 </div>
                 <div
@@ -497,15 +498,14 @@ function App(): JSX.Element {
                   }}
                 >
                   <div className="right-hint">
-                    {data.Books[0].hint_2}. It was released in{" "}
-                    {data.Books[0].release_year}
+                    {book?.hint_2}. It was released in {book?.release_year}
                   </div>
                   <div className="right-hint">
-                    It was written by {data.Books[0].author}
+                    It was written by {book?.author}
                   </div>
                 </div>
               </div>
-              <p style={{ width: "50%" }}>{data.Books[0].description}</p>
+              <p style={{ width: "50%" }}>{book?.description}</p>
             </div>
           )}
         </div>
