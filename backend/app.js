@@ -4,6 +4,7 @@ const cron = require('node-cron');
 const socketIO = require('socket.io');
 const express = require('express');
 const http = require('http');
+const WebSocket = require('ws');
 const app = express();
 const PORT = 8000; // or any port number you prefer
 function shuffleArrayInPlace(array) {
@@ -19,22 +20,12 @@ function shuffleArrayInPlace(array) {
 //     apiKey: process.env.OPENAI_API_KEY,
 // });
 const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 // AWS S3 configuration
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Replace with your AWS access key
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, // Replace with your AWS secret access key
     region: 'us-east-1', // Replace with your AWS region
-});
-const io = socketIO(server, {
-    cors: {
-        origin: 'http://localhost:3000', // Replace with the URL of your frontend application
-        methods: ['GET', 'POST'], // Allow specified HTTP methods
-        allowedHeaders: ['Content-Type'], // Allow specified headers
-        credentials: true
-    }
-});
-io.on('connection', (socket) => {
-    console.log('Client connected:', socket.id);
 });
 cron.schedule('* * * * *', () => {
     console.log("IN CRON")
@@ -49,7 +40,23 @@ cron.schedule('* * * * *', () => {
             let selectedBook = bookObj.Books.shift()
             console.log("SELECTEDBOOK", selectedBook)
             // Emit event with extracted data and time remaining to WebSocket clients
-            io.emit('dataReady', { book: selectedBook, timeRemaining: 60 });
+            wss.on('connection', (socket) => {
+                console.log('WebSocket client connected');
+                const objToSend = { book: selectedBook, timeRemaining: 60 };
+                socket.send(JSON.stringify(objToSend));
+
+                // Set up a message event listener for the WebSocket client
+                socket.on('message', (message) => {
+                    console.log(`Received message: ${message}`);
+
+                    // Send a response to the WebSocket client
+                });
+
+                // Set up a close event listener for the WebSocket client
+                socket.on('close', () => {
+                    console.log('WebSocket client disconnected');
+                });
+            });
             s3.putObject(
                 {
                     Bucket: process.env.AWS_BUCKET_NAME, // Replace with your bucket name
