@@ -20,9 +20,9 @@ To install Bookle to your local machine follow these steps:
  * Next if using SSH clone the project using `git clone git@github.com:alkezz/Bookle.git`
    * HTTPS: `git clone https://github.com/alkezz/Bookle.git`
  * Once you've cloned Bookle and you have verified it is on your machine:
-   * Change directory to the backend `cd backend` and install the necessary dependencies `npm install`
-   * Again change directory but now to the frontend folder `cd ..` `cd frontend` and install the necessary dependencies `npm install`
- * Using the `.env.example` input your keys to allow the application to work in the backend and rename the file to `.env`
+   * Change directory to the back end `cd backend` and install the necessary dependencies `npm install`
+   * Again change directory but now to the front end folder `cd ..` `cd frontend` and install the necessary dependencies `npm install`
+ * Using the `.env.example` input your keys to allow the application to work in the back end and rename the file to `.env`
    * HEADS UP: Keep in mind since I am pulling a JSON file from my S3 bucket to get book data you will not have any data to play with since that would require my AWS Secret Key but on request I will send you the book data to play around with if that is something you would like.
    * If you decide to create your own data to play around with be sure to follow the format of:
    ```json
@@ -43,14 +43,14 @@ To install Bookle to your local machine follow these steps:
       * *I am using an S3 bucket to hold onto these pictures to limit cheating*
    * This is assuming that you have an S3 bucket you can work with
      * If you don't, you can add a JSON file in the `frontend/src` directory and use that raw data to display books in the front end. Be sure to follow the format above
- * Once all that is out of the way, change directory to the backend `cd backend` and type into the terminal `npm start`.
+ * Once all that is out of the way, change directory to the back end `cd backend` and type into the terminal `npm start`.
    * Use `npm run dev` if you want to start the app using nodemon
- * Open a new terminal, change directory to the frontend `cd frontend` and type into the terminal once again `npm start`
+ * Open a new terminal, change directory to the front end `cd frontend` and type into the terminal once again `npm start`
  * If you did everything correctly, your default browser will open a new tab to the React App
  * Have fun :)
 
  ## Upcoming Features
-In the future, I plan on implementing GPT3 to make my life a bit easier when it comes to creating objects for each book. In a perfect world, I would pass in a book title to GPT3 in my backend and a prompt to create a JSON object. The response will be a book object with the key value pairs mentioned above that I can then send to my frontend.
+In the future, I plan on implementing GPT3 to make my life a bit easier when it comes to creating objects for each book. In a perfect world, I would pass in a book title to GPT3 in my back end and a prompt to create a JSON object. The response will be a book object with the key value pairs mentioned above that I can then send to my front end.
 As mentioned in my "Limitations" a database will be implemented in the near future to secure data from both bad actors and loss.
 
 ## Example Code
