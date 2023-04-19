@@ -14,14 +14,50 @@ function shuffleArrayInPlace(array) {
         array[j] = temp;
     }
 }
-const scores = {};
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
 // AWS S3 configuration
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     region: 'us-east-1'
+});
+console.log("NOT IN CRON")
+const scores = {};
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+s3.getObject({ Bucket: process.env.AWS_BUCKET_NAME, Key: 'bookData.json' }, (err, data) => {
+    if (err) {
+        console.error('Error reading JSON file from S3:', err);
+    } else {
+        // Extract data from JSON file
+        const bookObj = JSON.parse(data.Body.toString());
+        shuffleArrayInPlace(bookObj.Books) // Randomize the book array
+        let selectedBook = bookObj.Books.shift() // Select and remove the first book object
+        wss.on('connection', (socket) => { // Connecting to WebSocket
+            console.log('WebSocket client connected');
+            // Creating an obj to send consisting of the book and time remaining before the next book
+            const objToSend = { book: selectedBook, timeRemaining: 60 };
+            // Sending the book selected from above to send to the front end
+            socket.send(JSON.stringify(objToSend));
+
+            // Set up a close event listener for the WebSocket client
+            socket.on('close', () => {
+                console.log('WebSocket client disconnected');
+            });
+        });
+        s3.putObject(
+            {
+                Bucket: process.env.AWS_BUCKET_NAME,
+                Key: 'bookData.json',
+                Body: JSON.stringify(bookObj), // Convert the updated array of book objects back to JSON string
+            },
+            (err) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+            }
+        );
+    }
 });
 wss.on('connection', (socket) => {
     socket.on('message', (message) => {
