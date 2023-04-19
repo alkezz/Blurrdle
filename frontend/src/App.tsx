@@ -14,7 +14,7 @@ import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import Confetti from "react-confetti";
 import socketIOClient from "socket.io-client";
 import useWebSocket from "react-use-websocket";
-import * as dataActions from "./store/UpdateBook";
+import * as bookActions from "./store/UpdateBook"
 import { v4 as uuidv4 } from "uuid";
 
 function App(): JSX.Element | null {
@@ -26,6 +26,8 @@ function App(): JSX.Element | null {
   });
   const [scores, setScores] = useState<object>({});
   const dispatch = useDispatch();
+  const bookState = useSelector((state) => state)
+  console.log("STATE", bookState)
   // const data = useSelector((state) => state.data);
   // console.log(data, "DATA");
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
@@ -67,8 +69,6 @@ function App(): JSX.Element | null {
         lastMessage.data
       );
       if (book) {
-        console.log("IF BOOK", book);
-        console.log("ONEBOOK", oneBook);
         if (oneBook.title !== book.title) {
           console.log("IN IF 2");
           setOneBook(book);
@@ -78,7 +78,6 @@ function App(): JSX.Element | null {
           ) {
             localStorage.setItem("hasWon", "has not played");
             setHasWon(null);
-            console.log("IN IF 3");
           }
         }
       }
@@ -86,7 +85,6 @@ function App(): JSX.Element | null {
       if (scores) setScores(scores);
     }
   }, [lastMessage]);
-  // console.log(scores);
   useEffect(() => {
     const localStorageWinStatus = localStorage.getItem("hasWon");
     if (localStorageWinStatus === "true") setHasWon(true);
@@ -257,6 +255,7 @@ function App(): JSX.Element | null {
       <div className="abc">
         {/* <button onClick={handleModal}>y</button> */}
         <div className="full-page-container">
+          <button>YOOOO</button>
           {lives > 0 &&
             !isCorrect &&
             oneBook?.blurred_cover &&
