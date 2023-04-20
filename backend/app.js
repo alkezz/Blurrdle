@@ -14,6 +14,12 @@ function shuffleArrayInPlace(array) {
         array[j] = temp;
     }
 }
+function timeLeftForCronJob() {
+    const currentTime = new Date();
+    const nextRunTime = new Date(currentTime.getTime() + 5 * 60 * 1000);
+    const timeLeftInSeconds = Math.floor((nextRunTime - currentTime) / 1000);
+    return timeLeftInSeconds;
+}
 // AWS S3 configuration
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -35,7 +41,7 @@ s3.getObject({ Bucket: process.env.AWS_BUCKET_NAME, Key: 'bookData.json' }, (err
         wss.on('connection', (socket) => { // Connecting to WebSocket
             console.log('WebSocket client connected');
             // Creating an obj to send consisting of the book and time remaining before the next book
-            const objToSend = { book: selectedBook, timeRemaining: 60 };
+            const objToSend = { book: selectedBook, timeRemaining: timeLeftForCronJob() };
             // Sending the book selected from above to send to the front end
             socket.send(JSON.stringify(objToSend));
 
@@ -91,7 +97,7 @@ wss.on('connection', (socket) => {
         }
     })
 })
-cron.schedule('* * * * *', () => {
+cron.schedule('*/5 * * * *', () => {
     console.log("IN CRON")
     // Read JSON file from S3
     s3.getObject({ Bucket: process.env.AWS_BUCKET_NAME, Key: 'bookData.json' }, (err, data) => {
@@ -105,7 +111,7 @@ cron.schedule('* * * * *', () => {
             wss.on('connection', (socket) => { // Connecting to WebSocket
                 console.log('WebSocket client connected');
                 // Creating an obj to send consisting of the book and time remaining before the next book
-                const objToSend = { book: selectedBook, timeRemaining: 60 };
+                const objToSend = { book: selectedBook, timeRemaining: timeLeftForCronJob() };
                 // Sending the book selected from above to send to the front end
                 socket.send(JSON.stringify(objToSend));
 

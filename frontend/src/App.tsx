@@ -26,11 +26,12 @@ function App(): JSX.Element | null {
   });
   const [scores, setScores] = useState<object>({});
   const dispatch = useDispatch();
-  // const data = useSelector((state) => state.data);
-  // console.log(data, "DATA");
+  const prevBook = useSelector((state) => state);
+  console.log(prevBook);
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
   const [oneBook, setOneBook] = useState<object>({});
   const [time, setTime] = useState<number>();
+  const [timeLeft, setTimeLeft] = useState<string>();
   const [inputValue, setInputValue] = useState<string>("");
   const [hasWon, setHasWon] = useState<boolean | null>(null);
   const [userGuess, setUserGuess] = useState<string>();
@@ -47,42 +48,79 @@ function App(): JSX.Element | null {
       height: window.innerHeight,
     });
   };
-  // const localStorageWinStatus = localStorage.getItem("hasWon");
-  // if (localStorageWinStatus === "true") setIsCorrect(true);
-  // if (!localStorage.getItem("player_id")) {
-  //   localStorage.setItem("player_id", uuidv4());
-  // }
+  const calculateTime = (secs) => {
+    const minutes = Math.floor(secs / 60);
+    const returnedMins = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const seconds = Math.floor(secs % 60);
+    const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    return `${returnedMins}:${returnedSeconds}`;
+  };
   // useEffect(() => {
-  //   const socket = socketIOClient("http://localhost:8000");
-  //   socket.on("connect", () => {
-  //     console.log("SOCKET READY ");
-  //   });
-  //   socket.on("dataReady", (data) => {
-  //     dispatch(dataActions.updateData(data));
-  //   });
-  // }, [dispatch]);
+  //   if (prevBook) {
+  //     setOneBook(prevBook.book.data);
+  //   } else {
+  //     if (lastMessage !== null) {
+  //       const { book, timeRemaining, type, scores } = JSON.parse(
+  //         lastMessage.data
+  //       );
+  //       if (book) {
+  //         if (oneBook.title !== book.title) {
+  //           const book = dispatch(bookActions.getData());
+  //           setOneBook(book.payload);
+  //           if (
+  //             localStorage.getItem("hasWon") === "true" ||
+  //             localStorage.getItem("hasWon") === "false"
+  //           ) {
+  //             localStorage.setItem("hasWon", "has not played");
+  //             setHasWon(null);
+  //           }
+  //         }
+  //       }
+  //       if (timeRemaining) setTime(timeRemaining);
+  //       if (scores) setScores(scores);
+  //     }
+  //   }
+  // }, [prevBook]);
+  // useEffect(() => {
+  //   if (lastMessage !== null) {
+  //     handleWebSocketMessage(lastMessage.data);
+  //   }
+  //   function handleWebSocketMessage(event) {
+  //     const data = JSON.parse(event);
+  //     if (data.book && (!prevBook || prevBook.book.title !== data.book.title)) {
+  //       const book = dispatch(bookActions.uploadBook(data.book));
+  //       setOneBook(book.payload);
+  //       setHasWon(null);
+  //       setIsCorrect(false);
+  //       localStorage.removeItem("hasWon");
+  //     }
+  //   }
+  // }, [lastMessage]);
+
   useEffect(() => {
     if (lastMessage !== null) {
       const { book, timeRemaining, type, scores } = JSON.parse(
         lastMessage.data
       );
-      if (book) {
-        if (oneBook.title !== book.title) {
-          setOneBook(book);
-          if (
-            localStorage.getItem("hasWon") === "true" ||
-            localStorage.getItem("hasWon") === "false"
-          ) {
-            localStorage.setItem("hasWon", "has not played");
-            setHasWon(null);
-          }
-        }
-      }
+      if (book) setOneBook(book);
       if (timeRemaining) setTime(timeRemaining);
       if (scores) setScores(scores);
     }
   }, [lastMessage]);
-  // console.log(scores);
+  useEffect(() => {
+    if (time && time > 0) {
+      setTimeout(() => {
+        setTime(time - 1);
+        setTimeLeft(calculateTime(time));
+      }, 1000);
+    }
+  });
+  // useEffect(() => {
+  //   if (Object.keys(oneBook).length === 0) {
+  //     const book = dispatch(bookActions.getData());
+  //     setOneBook(book.payload);
+  //   }
+  // }, [setOneBook]);
   useEffect(() => {
     const localStorageWinStatus = localStorage.getItem("hasWon");
     if (localStorageWinStatus === "true") setHasWon(true);
@@ -98,6 +136,10 @@ function App(): JSX.Element | null {
       window.removeEventListener("resize", detectSize);
     };
   }, [windowDimension]);
+  const handleNewBook = (): void => {
+    const book = dispatch(bookActions.uploadBook());
+    setOneBook(book.payload);
+  };
   const handleModal = (): void => (open ? setOpen(false) : setOpen(true));
   const handleWin = (): void => {
     setIsCorrect(true);
@@ -251,7 +293,8 @@ function App(): JSX.Element | null {
         </Modal>
       </div>
       <div className="abc">
-        {/* <button onClick={handleModal}>y</button> */}
+        <button onClick={handleNewBook}>newBook</button>
+        <h2>TIME LEFT: {timeLeft}</h2>
         <div className="full-page-container">
           {lives > 0 &&
             !isCorrect &&

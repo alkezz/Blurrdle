@@ -9,10 +9,17 @@ function shuffleArrayInPlace(array) {
     }
 }
 
-const getData = (data) => {
+export const uploadBook = () => {
+    const book = bookData.Books[Math.floor(Math.random() * bookData.Books.length)]
     return {
-        type: "GET_DATA",
-        payload: data
+        type: "UPLOAD_BOOK",
+        payload: book
+    }
+}
+
+export const getBook = () => {
+    return {
+        type: "GET_BOOK"
     }
 }
 
@@ -20,19 +27,20 @@ const initialState = {
     data: null
 }
 
-export const getOneBook = () => async (dispatch) => {
-    shuffleArrayInPlace(bookData.Books)
-    const book = bookData.Books[Math.floor(Math.random() * bookData.Books.length)]
-    dispatch(getData(book))
-    return book
-}
+// export const getOneBook = () => async (dispatch) => {
+//     shuffleArrayInPlace(bookData.Books)
+//     const book = bookData.Books[Math.floor(Math.random() * bookData.Books.length)]
+//     await dispatch(getData(book))
+// }
 
 const dataReducer = (state = initialState, action) => {
     let newState = {};
     switch (action.type) {
-        case 'GET_DATA':
-            newState[action.payload.title] = action.payload
+        case 'UPLOAD_BOOK':
+            newState = action.payload
             return newState;
+        case 'GET_BOOK':
+            return newState
         default:
             return state;
     }
