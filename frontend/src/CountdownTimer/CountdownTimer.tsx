@@ -43,7 +43,7 @@ function CountdownTimer({ nextTriggerTime, setHasWon, setIsCorrect }: Props) {
     const interval = setInterval(updateTimeDifference, 1000);
     return () => clearInterval(interval);
   }, [nextTriggerTime]);
-  console.log(timeDifference);
+  // console.log(timeDifference);
   if (timeDifference === "00:00:00") {
     setTimeout(() => {
       window.location.reload();
@@ -54,7 +54,7 @@ function CountdownTimer({ nextTriggerTime, setHasWon, setIsCorrect }: Props) {
     }, 1000);
   }
   if (!nextTriggerTime) return null;
-  return <h3>Time remaining: {timeDifference}</h3>;
+  return <h3>Next Book Available in: <span style={{color: "yellow"}}>{timeDifference}</span></h3>;
 }
 
 export default CountdownTimer;

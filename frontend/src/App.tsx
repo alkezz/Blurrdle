@@ -145,7 +145,10 @@ function App(): JSX.Element | null {
       localStorage.setItem("player_id", uuidv4());
       setOpen(true);
     }
-  }, []);
+    if(localStorage.getItem("lives")){
+      setLives(Number(localStorage.getItem("lives")))
+    }
+  }, [setLives]);
   useEffect(() => {
     window.addEventListener("resize", detectSize);
     return () => {
@@ -184,6 +187,8 @@ function App(): JSX.Element | null {
       handleWin();
     } else if (lives > 1) {
       setLives(lives - 1);
+      localStorage.setItem("lives", (lives - 1).toString())
+      // localStorage.setItem("lives", lives.toString())
       if (!isHintOneVisible) {
         setIsHintOneVisible(true);
       } else {
@@ -225,9 +230,9 @@ function App(): JSX.Element | null {
           }}
         >
           <div className="modal-content">
-            <p>👋 Hello! My name is Ali Ezzeddine and welcome to Blurzzle!</p>
+            <p>👋 Hello! My name is Ali Ezzeddine and welcome to Blurrdle!</p>
             <p>
-              Blurzzle is a mash-up between the beloved game "Wordle" and all
+              Blurrdle is a mash-up between the beloved game "Wordle" and all
               the other "dle" games like{" "}
               <a
                 rel="noreferrer"
@@ -263,8 +268,7 @@ function App(): JSX.Element | null {
                 lose a life
               </li>
               <li>
-                You are given a blurry image of the book cover, how many words
-                are in the title, and the average rating (from OpenLibrary)
+                You are given a blurry image of the book cover at first
               </li>
               <li>
                 After each wrong guess a hint will appear. You will get 4 hints
@@ -309,7 +313,13 @@ function App(): JSX.Element | null {
         </Modal>
       </div>
       <div className="abc">
-        <button onClick={handleNewBook}>newBook</button>
+        {/* <button onClick={handleNewBook}>newBook</button> */}
+        <h1>Welcome to Blurrdle!
+          &nbsp;
+          <Tooltip title='More Info'>
+            <InfoIcon className="info-icon" onClick={handleModal} sx={{cursor: "pointer"}} />
+          </Tooltip>
+          </h1>
         <CountdownTimer
           nextTriggerTime={time}
           setHasWon={setHasWon}
@@ -321,10 +331,10 @@ function App(): JSX.Element | null {
             oneBook?.blurred_cover &&
             hasWon === null && (
               <div className="guess-container">
-                <span style={{ fontSize: "22px" }}>
+                {/* <span style={{ fontSize: "22px" }}>
                   Title: {oneBook?.title.split(" ").length} Words
-                </span>
-                <br />
+                </span> */}
+                {/* <br /> */}
                 <AutocompleteSearchBox
                   isSelected={isSelected}
                   setIsSelected={setIsSelected}
