@@ -5,6 +5,7 @@ const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const app = express();
+const CronJob = require("cron").CronJob;
 const PORT = 8000;
 function shuffleArrayInPlace(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -41,7 +42,8 @@ s3.getObject({ Bucket: process.env.AWS_BUCKET_NAME, Key: 'bookData.json' }, (err
         wss.on('connection', (socket) => { // Connecting to WebSocket
             console.log('WebSocket client connected');
             // Creating an obj to send consisting of the book and time remaining before the next book
-            const objToSend = { book: selectedBook, timeRemaining: timeLeftForCronJob() };
+            const nextUpdateTime = new Date(cronJob.nextDates())
+            const objToSend = { book: selectedBook, nextUpdateTime };
             // Sending the book selected from above to send to the front end
             socket.send(JSON.stringify(objToSend));
 
@@ -97,7 +99,7 @@ wss.on('connection', (socket) => {
         }
     })
 })
-cron.schedule('*/5 * * * *', () => {
+const cronJob = new CronJob('0 0 * * *', () => {
     console.log("IN CRON")
     // Read JSON file from S3
     s3.getObject({ Bucket: process.env.AWS_BUCKET_NAME, Key: 'bookData.json' }, (err, data) => {
@@ -110,8 +112,9 @@ cron.schedule('*/5 * * * *', () => {
             let selectedBook = bookObj.Books.shift() // Select and remove the first book object
             wss.on('connection', (socket) => { // Connecting to WebSocket
                 console.log('WebSocket client connected');
+                const nextUpdateTime = new Date(cronJob.nextDates())
                 // Creating an obj to send consisting of the book and time remaining before the next book
-                const objToSend = { book: selectedBook, timeRemaining: timeLeftForCronJob() };
+                const objToSend = { book: selectedBook, nextUpdateTime };
                 // Sending the book selected from above to send to the front end
                 socket.send(JSON.stringify(objToSend));
 
@@ -135,7 +138,48 @@ cron.schedule('*/5 * * * *', () => {
             );
         }
     });
-});
+}, null, true);
+setInterval(() => {
+    console.log("Next job time:", new Date(cronJob.nextDates()))
+}, 1000);
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+// DateTime {
+//     ts: 1682360400000,
+//     _zone: SystemZone {},
+//     loc: Locale {
+//       locale: 'en-US',
+//       numberingSystem: null,
+//       outputCalendar: null,
+//       intl: 'en-US',
+//       weekdaysCache: { format: {}, standalone: {} },
+//       monthsCache: { format: {}, standalone: {} },
+//       meridiemCache: null,
+//       eraCache: {},
+//       specifiedLocale: null,
+//       fastNumbersCached: null
+//     },
+//     invalid: null,
+//     weekData: {
+//       weekYear: 2023,
+//       weekNumber: 17,
+//       weekday: 1,
+//       hour: 14,
+//       minute: 20,
+//       second: 0,
+//       millisecond: 0
+//     },
+//     c: {
+//       year: 2023,
+//       month: 4,
+//       day: 24,
+//       hour: 14,
+//       minute: 20,
+//       second: 0,
+//       millisecond: 0
+//     },
+//     o: -240,
+//     isLuxonDateTime: true
+//   }

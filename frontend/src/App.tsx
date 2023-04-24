@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import "./App.css";
 import data from "./BookData/bookData.json";
 import AutocompleteSearchBox from "./AutoComplete/AutoCompleteSearchBox";
+import CountdownTimer from "./CountdownTimer/CountdownTimer.tsx";
 import InfoIcon from "@mui/icons-material/Info";
 import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
@@ -27,10 +28,11 @@ function App(): JSX.Element | null {
   const [scores, setScores] = useState<object>({});
   const dispatch = useDispatch();
   const prevBook = useSelector((state) => state);
-  console.log(prevBook);
+  // console.log(prevBook);
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
   const [oneBook, setOneBook] = useState<object>({});
   const [time, setTime] = useState<number>();
+  const [stringTime, setStringTime] = useState<string>("");
   const [timeLeft, setTimeLeft] = useState<string>();
   const [inputValue, setInputValue] = useState<string>("");
   const [hasWon, setHasWon] = useState<boolean | null>(null);
@@ -97,16 +99,30 @@ function App(): JSX.Element | null {
   //   }
   // }, [lastMessage]);
 
-  // useEffect(() => {
-  //   if (lastMessage !== null) {
-  //     const { book, timeRemaining, type, scores } = JSON.parse(
-  //       lastMessage.data
-  //     );
-  //     if (book) setOneBook(book);
-  //     if (timeRemaining) setTime(timeRemaining);
-  //     if (scores) setScores(scores);
+  useEffect(() => {
+    if (lastMessage !== null) {
+      const { book, nextUpdateTime, type, scores } = JSON.parse(
+        lastMessage.data
+      );
+      if (book) setOneBook(book);
+      if (nextUpdateTime) {
+        console.log("UPDATE", nextUpdateTime);
+        setTime(nextUpdateTime);
+      }
+      if (scores) setScores(scores);
+    }
+  }, [lastMessage]);
+  // setTimeout(() => {
+  //   if (time) {
+  //     console.log("TIME", time);
+  //     const currTime = new Date();
+  //     const timeWhenCronFires = new Date(time);
+  //     const timeDiffInMs = timeWhenCronFires - currTime;
+  //     const timeDiffInMin = Math.floor(timeDiffInMs / 1000 / 60);
+  //     console.log("kjesdfl", timeDiffInMs);
+  //     setStringTime(calculateTime);
   //   }
-  // }, [lastMessage]);
+  // }, 1000);
   // useEffect(() => {
   //   if (time && time > 0) {
   //     setTimeout(() => {
@@ -195,7 +211,7 @@ function App(): JSX.Element | null {
     }
   }, [screenShake]);
   if (!oneBook) return null;
-  console.log("oneBook", oneBook);
+  // console.log("oneBook", oneBook);
   return (
     <>
       <div className="modal-container">
@@ -294,7 +310,11 @@ function App(): JSX.Element | null {
       </div>
       <div className="abc">
         <button onClick={handleNewBook}>newBook</button>
-        <h2>TIME LEFT: {timeLeft}</h2>
+        <CountdownTimer
+          nextTriggerTime={time}
+          setHasWon={setHasWon}
+          setIsCorrect={setIsCorrect}
+        />
         <div className="full-page-container">
           {lives > 0 &&
             !isCorrect &&
