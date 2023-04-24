@@ -97,24 +97,24 @@ function App(): JSX.Element | null {
   //   }
   // }, [lastMessage]);
 
-  useEffect(() => {
-    if (lastMessage !== null) {
-      const { book, timeRemaining, type, scores } = JSON.parse(
-        lastMessage.data
-      );
-      if (book) setOneBook(book);
-      if (timeRemaining) setTime(timeRemaining);
-      if (scores) setScores(scores);
-    }
-  }, [lastMessage]);
-  useEffect(() => {
-    if (time && time > 0) {
-      setTimeout(() => {
-        setTime(time - 1);
-        setTimeLeft(calculateTime(time));
-      }, 1000);
-    }
-  });
+  // useEffect(() => {
+  //   if (lastMessage !== null) {
+  //     const { book, timeRemaining, type, scores } = JSON.parse(
+  //       lastMessage.data
+  //     );
+  //     if (book) setOneBook(book);
+  //     if (timeRemaining) setTime(timeRemaining);
+  //     if (scores) setScores(scores);
+  //   }
+  // }, [lastMessage]);
+  // useEffect(() => {
+  //   if (time && time > 0) {
+  //     setTimeout(() => {
+  //       setTime(time - 1);
+  //       setTimeLeft(calculateTime(time));
+  //     }, 1000);
+  //   }
+  // });
   // useEffect(() => {
   //   if (Object.keys(oneBook).length === 0) {
   //     const book = dispatch(bookActions.getData());

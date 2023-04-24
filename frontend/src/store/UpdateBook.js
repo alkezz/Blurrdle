@@ -8,9 +8,8 @@ function shuffleArrayInPlace(array) {
         array[j] = temp;
     }
 }
-
 export const uploadBook = () => {
-    const book = bookData.Books[Math.floor(Math.random() * bookData.Books.length)]
+    const book = bookData.Books[0]
     return {
         type: "UPLOAD_BOOK",
         payload: book
