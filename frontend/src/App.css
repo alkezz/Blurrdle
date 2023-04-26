@@ -104,7 +104,8 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: -20px;
+  /* margin-bottom: -20px; */
+  margin-bottom: 500px;
 }
 .right-hint {
   width: 325px;
@@ -181,7 +182,7 @@ li {
   font-family: Circular;
 }
 
-.info-icon:hover{
+.info-icon:hover {
   transform: scale(1.3);
   transition: transform 0.1s ease-in-out;
 }

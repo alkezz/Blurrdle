@@ -4,10 +4,16 @@ import { useSelector } from "react-redux";
 import "./App.css";
 import data from "./BookData/bookData.json";
 import AutocompleteSearchBox from "./AutoComplete/AutoCompleteSearchBox";
+import MainPage from "./MainPage/MainPage";
+import WinnerPage from "./WinnerPage/WinnerPage";
+import LoserPage from "./LoserPage/LoserPage";
+import ReturningWinner from "./ReturningWinner/ReturningWinner";
+import ReturningLoser from "./ReturningLoser/ReturningLoser";
 import CountdownTimer from "./CountdownTimer/CountdownTimer.tsx";
 import InfoIcon from "@mui/icons-material/Info";
 import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
+import Grow from "@mui/material/Grow";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -145,16 +151,16 @@ function App(): JSX.Element | null {
       localStorage.setItem("player_id", uuidv4());
       setOpen(true);
     }
-    if(localStorage.getItem("lives")){
-      setLives(Number(localStorage.getItem("lives")))
+    if (localStorage.getItem("lives")) {
+      setLives(Number(localStorage.getItem("lives")));
     }
   }, [setLives]);
-  useEffect(() => {
-    window.addEventListener("resize", detectSize);
-    return () => {
-      window.removeEventListener("resize", detectSize);
-    };
-  }, [windowDimension]);
+  // useEffect(() => {
+  //   window.addEventListener("resize", detectSize);
+  //   return () => {
+  //     window.removeEventListener("resize", detectSize);
+  //   };
+  // }, [windowDimension]);
   const handleNewBook = (): void => {
     const book = dispatch(bookActions.uploadBook());
     setOneBook(book.payload);
@@ -187,8 +193,7 @@ function App(): JSX.Element | null {
       handleWin();
     } else if (lives > 1) {
       setLives(lives - 1);
-      localStorage.setItem("lives", (lives - 1).toString())
-      // localStorage.setItem("lives", lives.toString())
+      localStorage.setItem("lives", (lives - 1).toString());
       if (!isHintOneVisible) {
         setIsHintOneVisible(true);
       } else {
@@ -267,9 +272,7 @@ function App(): JSX.Element | null {
                 You have 5 lives, every time you guess a book title wrong you
                 lose a life
               </li>
-              <li>
-                You are given a blurry image of the book cover at first
-              </li>
+              <li>You are given a blurry image of the book cover at first</li>
               <li>
                 After each wrong guess a hint will appear. You will get 4 hints
                 including the book author
@@ -313,299 +316,53 @@ function App(): JSX.Element | null {
         </Modal>
       </div>
       <div className="abc">
-        {/* <button onClick={handleNewBook}>newBook</button> */}
-        <h1>Welcome to Blurrdle!
-          &nbsp;
-          <Tooltip title='More Info'>
-            <InfoIcon className="info-icon" onClick={handleModal} sx={{cursor: "pointer"}} />
+        <h1>
+          Welcome to Blurrdle! &nbsp;
+          <Tooltip title="More Info">
+            <InfoIcon
+              className="info-icon"
+              onClick={handleModal}
+              sx={{ cursor: "pointer" }}
+            />
           </Tooltip>
-          </h1>
-        <CountdownTimer
-          nextTriggerTime={time}
-          setHasWon={setHasWon}
-          setIsCorrect={setIsCorrect}
-        />
+        </h1>
+        {hasWon === null && (
+          <CountdownTimer
+            nextTriggerTime={time}
+            setHasWon={setHasWon}
+            setIsCorrect={setIsCorrect}
+          />
+        )}
         <div className="full-page-container">
           {lives > 0 &&
             !isCorrect &&
             oneBook?.blurred_cover &&
             hasWon === null && (
-              <div className="guess-container">
-                {/* <span style={{ fontSize: "22px" }}>
-                  Title: {oneBook?.title.split(" ").length} Words
-                </span> */}
-                {/* <br /> */}
-                <AutocompleteSearchBox
-                  isSelected={isSelected}
-                  setIsSelected={setIsSelected}
-                  inputValue={inputValue}
-                  setInputValue={setInputValue}
-                />
-                <br />
-                <button className="submit-button" onClick={handleSubmit}>
-                  SUBMIT
-                </button>
-                <br />
-                <h2>Can you guess this book?</h2>
-                <div style={{ display: "flex" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      marginTop: "10%",
-                      width: "350px",
-                    }}
-                  >
-                    {showHint >= 1 && (
-                      <div className="left-hint">{oneBook?.hint_1}</div>
-                    )}
-                    {showHint >= 3 && (
-                      <div className="left-hint">{oneBook?.hint_3}</div>
-                    )}
-                  </div>
-                  <div>
-                    <img
-                      alt="book cover"
-                      className="no-blur"
-                      src={oneBook?.blurred_cover}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      marginTop: "10%",
-                      width: "350px",
-                    }}
-                  >
-                    {showHint >= 2 && (
-                      <div className="right-hint">
-                        {oneBook?.hint_2}. It was released in{" "}
-                        {oneBook?.release_year}
-                      </div>
-                    )}
-                    {showHint >= 4 && (
-                      <div className="right-hint">
-                        It was written by {oneBook?.author}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div style={{ marginTop: "15px" }}>
-                  {[...Array(lives)].map((_, i) => (
-                    <FavoriteIcon sx={{ color: "red", fontSize: "30px" }} />
-                  ))}
-                  {screenShake && <span className="falling-number">-1</span>}
-                </div>
-              </div>
+              <MainPage
+                isSelected={isSelected}
+                setIsSelected={setIsSelected}
+                inputValue={inputValue}
+                setInputValue={setInputValue}
+                oneBook={oneBook}
+                showHint={showHint}
+                screenShake={screenShake}
+                lives={lives}
+                handleSubmit={handleSubmit}
+              />
             )}
           {lives > 0 && isCorrect && oneBook?.book_cover && hasWon === null && (
-            <div className="guess-container">
-              <Confetti
-                width={windowDimension.width}
-                height={windowDimension.height}
-              />
-              <h2>You got it!</h2>
-              <h2>
-                The correct answer was{" "}
-                <span style={{ color: "green" }}>{oneBook?.title}</span> by{" "}
-                {oneBook?.author}!
-              </h2>
-              <div style={{ display: "flex" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
-                  <div className="left-hint">{oneBook?.hint_1}</div>
-                  <div className="left-hint">{oneBook?.hint_3}</div>
-                </div>
-                <div>
-                  <img
-                    alt="book cover"
-                    className="no-blur"
-                    src={oneBook?.book_cover}
-                  />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
-                  <div className="right-hint">
-                    {oneBook?.hint_2}. It was released in{" "}
-                    {oneBook?.release_year}
-                  </div>
-                  <div className="right-hint">
-                    It was written by {oneBook?.author}
-                  </div>
-                </div>
-              </div>
-              <h3 style={{ width: "50%" }}>{oneBook?.description}</h3>
-            </div>
+            <WinnerPage oneBook={oneBook} />
           )}
-          {lives === 0 && hasWon === null && (
-            <div className="guess-container">
-              <h2>Too bad! You didn't get the book right!</h2>
-              <h2>
-                The correct answer was{" "}
-                <span style={{ color: "red" }}>{oneBook?.title}</span> by{" "}
-                {oneBook?.author}
-              </h2>
-              <div style={{ display: "flex" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
-                  <div className="left-hint">{oneBook?.hint_1}</div>
-                  <div className="left-hint">{oneBook?.hint_3}</div>
-                </div>
-                <div>
-                  <img
-                    alt="book cover"
-                    className="no-blur"
-                    src={oneBook?.book_cover}
-                  />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
-                  <div className="right-hint">
-                    {oneBook?.hint_2}. It was released in{" "}
-                    {oneBook?.release_year}
-                  </div>
-                  <div className="right-hint">
-                    It was written by {oneBook?.author}
-                  </div>
-                </div>
-              </div>
-              <p style={{ width: "50%" }}>{oneBook?.description}</p>
-            </div>
-          )}
+          {lives === 0 && hasWon === null && <LoserPage oneBook={oneBook} />}
           {hasWon && (
-            <div className="guess-container">
-              <h2 style={{ marginBottom: "-20px" }}>You got it!</h2>
-              <h2>
-                The correct answer was{" "}
-                <span style={{ color: "green" }}>{oneBook?.title}</span> by{" "}
-                {oneBook?.author}!
-                <br />
-                Come back tomorrow for a new challenge!
-              </h2>
-              {localStorage.getItem("guesses") === "0" && (
-                <span>You needed no hints you book worm, nice job!</span>
-              )}
-              {localStorage.getItem("guesses") !== "0" && (
-                <span>
-                  You got it in {localStorage.getItem("guesses")} guesses.
-                </span>
-              )}
-              <br />
-              <div style={{ display: "flex" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
-                  <div className="left-hint">{oneBook?.hint_1}</div>
-                  <div className="left-hint">{oneBook?.hint_3}</div>
-                </div>
-                <div>
-                  <img
-                    alt="book cover"
-                    className="no-blur"
-                    src={oneBook?.book_cover}
-                  />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
-                  <div className="right-hint">
-                    {oneBook?.hint_2}. It was released in{" "}
-                    {oneBook?.release_year}
-                  </div>
-                  <div className="right-hint">
-                    It was written by {oneBook?.author}
-                  </div>
-                </div>
-              </div>
-              <h3 style={{ width: "50%" }}>{oneBook?.description}</h3>
-            </div>
+            <ReturningWinner
+              nextTriggerTime={time}
+              setHasWon={setHasWon}
+              setIsCorrect={setIsCorrect}
+              oneBook={oneBook}
+            />
           )}
-          {hasWon === false && (
-            <div className="guess-container">
-              <h2>
-                You didn't get the answer today
-                <br />
-                Come back again tomorrow to try a new challenge!
-              </h2>
-              <h2>
-                The correct answer was{" "}
-                <span style={{ color: "red" }}>{oneBook?.title}</span> by{" "}
-                {oneBook?.author}
-              </h2>
-              <div style={{ display: "flex" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
-                  <div className="left-hint">{oneBook?.hint_1}</div>
-                  <div className="left-hint">{oneBook?.hint_3}</div>
-                </div>
-                <div>
-                  <img
-                    alt="book cover"
-                    className="no-blur"
-                    src={oneBook?.book_cover}
-                  />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: "10%",
-                    width: "350px",
-                  }}
-                >
-                  <div className="right-hint">
-                    {oneBook?.hint_2}. It was released in{" "}
-                    {oneBook?.release_year}
-                  </div>
-                  <div className="right-hint">
-                    It was written by {oneBook?.author}
-                  </div>
-                </div>
-              </div>
-              <p style={{ width: "50%" }}>{oneBook?.description}</p>
-            </div>
-          )}
+          {hasWon === false && <ReturningLoser oneBook={oneBook} />}
         </div>
       </div>
     </>
