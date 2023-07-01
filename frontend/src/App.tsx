@@ -25,9 +25,9 @@ import * as bookActions from "./store/UpdateBook";
 import { v4 as uuidv4 } from "uuid";
 
 function App(): JSX.Element | null {
-  const { lastMessage } = useWebSocket("ws://blurrdle-backend.onrender.com");
+  const { lastMessage } = useWebSocket("wss://blurrdle-backend.onrender.com");
   const { sendJsonMessage } = useWebSocket(
-    "ws://blurrdle-backend.onrender.com"
+    "wss://blurrdle-backend.onrender.com"
   );
   const [windowDimension, setWindowDimension] = useState<object>({
     width: window.innerWidth,
