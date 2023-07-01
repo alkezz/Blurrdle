@@ -4,7 +4,7 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) 
 
     return (
         <div className="guess-container">
-            <h2 style={{ marginBottom: "-20px" }}>You got it!</h2>
+            <h2 style={{ marginBottom: "-20px" }}>You got it {localStorage.getItem("guesses") === "0" ? <span style={{ color: "green" }}>first try you book worm</span> : <span>in <span style={{ color: "green" }}>{localStorage.getItem("guesses")}</span> guesses</span>}!</h2>
             <h2>
                 The correct answer was{" "}
                 <span style={{ color: "green" }}>{oneBook?.title}</span> by{" "}
@@ -12,14 +12,14 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) 
                 <br />
                 {<CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />}
             </h2>
-            {localStorage.getItem("guesses") === "0" && (
+            {/* {localStorage.getItem("guesses") === "0" && (
                 <span>You needed no hints you book worm, nice job!</span>
             )}
             {localStorage.getItem("guesses") !== "0" && (
                 <span>
                     You got it in {localStorage.getItem("guesses")} guesses.
                 </span>
-            )}
+            )} */}
             <br />
             <div style={{ display: "flex" }}>
                 <div

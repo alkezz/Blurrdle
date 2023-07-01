@@ -25,8 +25,10 @@ import * as bookActions from "./store/UpdateBook";
 import { v4 as uuidv4 } from "uuid";
 
 function App(): JSX.Element | null {
-  const { lastMessage } = useWebSocket("ws://localhost:8000");
-  const { sendJsonMessage } = useWebSocket("ws://localhost:8000");
+  const { lastMessage } = useWebSocket("ws://blurrdle-backend.onrender.com");
+  const { sendJsonMessage } = useWebSocket(
+    "ws://blurrdle-backend.onrender.com"
+  );
   const [windowDimension, setWindowDimension] = useState<object>({
     width: window.innerWidth,
     height: window.innerHeight,
@@ -295,7 +297,7 @@ function App(): JSX.Element | null {
               <Tooltip title="LinkedIn" arrow>
                 <a
                   rel="noreferrer"
-                  href="https://www.linkedin.com/in/ali-ezzeddine-17b2b6248/"
+                  href="https://www.linkedin.com/in/ali-k-ezzeddine"
                   target="_blank"
                 >
                   <LinkedInIcon sx={{ fontSize: "28px" }} />
