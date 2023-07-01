@@ -1,13 +1,13 @@
-# Bookle
+# Blurrdle
 
-### Bookle is a mash up between the beloved game "Wordle" and all the other "dle" games like [Global](https://globle-game.com/), [Tradle](https://oec.world/en/tradle/), and [Gamedle](https://www.gamedle.wtf/#).
+### Blurrdle is a mash up between the beloved game "Wordle" and all the other "dle" games like [Global](https://globle-game.com/), [Tradle](https://oec.world/en/tradle/), and [Gamedle](https://www.gamedle.wtf/#).
 
 #### The primary objective of this game is to guess the book right in 5 attempts. After each wrong guess a hint will appear to help guide you towards the right answer. After 24 hours a new book is chosen from a JSON file pulled from my S3 bucket and sent to the front end using WebSockets
 
 Built using JavaScript, TypeScript, React, and WebSockets in the front end. In the back end to schedule a new book being chosen every 24 hours I used the cron package to pull data every time it fires, sends it to the front end to update the book, and removes that book from the JSON file to send back to my S3 bucket. I used a combination of Node.js, Express, and WebSockets to achieve the desired result
 
 ## Features
-  * Currently, Bookle uses localStorage to track and manage user activity, including tracking if users have already played today's Bookle and their guesses for improved user experience.
+  * Currently, Blurrdle uses localStorage to track and manage user activity, including tracking if users have already played today's Blurrdle and their guesses for improved user experience.
   * After a win or loss, WebSockets will send your player_id, your score, and your time to the back end. The back end then will check whether your score is larger than the score saved and will replace it if it does and will do the same thing with the time it took you to finish.
 
 ## Limitations
@@ -15,11 +15,11 @@ Built using JavaScript, TypeScript, React, and WebSockets in the front end. In t
   * Also due to my small playerbase localStorage seemed like a good option to track players who enter my application. The first time a player enters they are given a player_id using uuid. After you win or lose, localStorage will update to include 2 Key Value Pairs, `"hasWon"` which will hold either `true` or `false` and `"guesses"` which holds the amount of attempts it took you to guess the book correctly. The limitation comes from users being able to clear their localStorage which would lose all the progress they've made and can lead to "cheating". As my playerbase grows I will move away from localStorage and again use a database to track users more efficiently and securely.
 
 ## Installation
-To install Bookle to your local machine follow these steps:
- * Using your favorite terminal, change directory to where you want to save Bookle
+To install Blurrdle to your local machine follow these steps:
+ * Using your favorite terminal, change directory to where you want to save Blurrdle
  * Next if using SSH clone the project using `git clone git@github.com:alkezz/Bookle.git`
    * HTTPS: `git clone https://github.com/alkezz/Bookle.git`
- * Once you've cloned Bookle and you have verified it is on your machine:
+ * Once you've cloned Blurrdle and you have verified it is on your machine:
    * Change directory to the back end `cd backend` and install the necessary dependencies `npm install`
    * Again change directory but now to the front end folder `cd ..` `cd frontend` and install the necessary dependencies `npm install`
  * Using the `.env.example` input your keys to allow the application to work in the back end and rename the file to `.env`
