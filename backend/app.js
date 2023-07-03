@@ -27,14 +27,15 @@ const s3 = new AWS.S3({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     region: 'us-east-1'
 });
-console.log("NOT IN CRON")
 const scores = {};
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
+console.log("NOT IN CRON OUTSIDE FIRST FN")
 s3.getObject({ Bucket: process.env.AWS_BUCKET_NAME, Key: 'bookData.json' }, (err, data) => {
     if (err) {
         console.error('Error reading JSON file from S3:', err);
     } else {
+        console.log("IN FN")
         // Extract data from JSON file
         const bookObj = JSON.parse(data.Body.toString());
         shuffleArrayInPlace(bookObj.Books) // Randomize the book array
@@ -141,7 +142,7 @@ const cronJob = new CronJob('0 0 * * *', () => {
 }, null, true);
 setInterval(() => {
     console.log("Next job time:", new Date(cronJob.nextDates()))
-}, 1000);
+}, 30000);
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
