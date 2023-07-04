@@ -2,24 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import "./App.css";
-import data from "./BookData/bookData.json";
-import AutocompleteSearchBox from "./AutoComplete/AutoCompleteSearchBox";
 import MainPage from "./MainPage/MainPage";
 import WinnerPage from "./WinnerPage/WinnerPage";
 import LoserPage from "./LoserPage/LoserPage";
 import ReturningWinner from "./ReturningWinner/ReturningWinner";
 import ReturningLoser from "./ReturningLoser/ReturningLoser";
-import CountdownTimer from "./CountdownTimer/CountdownTimer.tsx";
+import CountdownTimer from "./CountdownTimer/CountdownTimer";
 import InfoIcon from "@mui/icons-material/Info";
 import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
-import Grow from "@mui/material/Grow";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
-import Confetti from "react-confetti";
-import socketIOClient from "socket.io-client";
 import useWebSocket from "react-use-websocket";
 import * as bookActions from "./store/UpdateBook";
 import { v4 as uuidv4 } from "uuid";
@@ -35,13 +29,9 @@ function App(): JSX.Element | null {
   });
   const [scores, setScores] = useState<object>({});
   const dispatch = useDispatch();
-  const prevBook = useSelector((state) => state);
-  // console.log(prevBook);
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
   const [oneBook, setOneBook] = useState<object>({});
   const [time, setTime] = useState<number>();
-  const [stringTime, setStringTime] = useState<string>("");
-  const [timeLeft, setTimeLeft] = useState<string>();
   const [inputValue, setInputValue] = useState<string>("");
   const [hasWon, setHasWon] = useState<boolean | null>(null);
   const [userGuess, setUserGuess] = useState<string>();
@@ -58,55 +48,6 @@ function App(): JSX.Element | null {
       height: window.innerHeight,
     });
   };
-  const calculateTime = (secs) => {
-    const minutes = Math.floor(secs / 60);
-    const returnedMins = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    const seconds = Math.floor(secs % 60);
-    const returnedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
-    return `${returnedMins}:${returnedSeconds}`;
-  };
-  // useEffect(() => {
-  //   if (prevBook) {
-  //     setOneBook(prevBook.book.data);
-  //   } else {
-  //     if (lastMessage !== null) {
-  //       const { book, timeRemaining, type, scores } = JSON.parse(
-  //         lastMessage.data
-  //       );
-  //       if (book) {
-  //         if (oneBook.title !== book.title) {
-  //           const book = dispatch(bookActions.getData());
-  //           setOneBook(book.payload);
-  //           if (
-  //             localStorage.getItem("hasWon") === "true" ||
-  //             localStorage.getItem("hasWon") === "false"
-  //           ) {
-  //             localStorage.setItem("hasWon", "has not played");
-  //             setHasWon(null);
-  //           }
-  //         }
-  //       }
-  //       if (timeRemaining) setTime(timeRemaining);
-  //       if (scores) setScores(scores);
-  //     }
-  //   }
-  // }, [prevBook]);
-  // useEffect(() => {
-  //   if (lastMessage !== null) {
-  //     handleWebSocketMessage(lastMessage.data);
-  //   }
-  //   function handleWebSocketMessage(event) {
-  //     const data = JSON.parse(event);
-  //     if (data.book && (!prevBook || prevBook.book.title !== data.book.title)) {
-  //       const book = dispatch(bookActions.uploadBook(data.book));
-  //       setOneBook(book.payload);
-  //       setHasWon(null);
-  //       setIsCorrect(false);
-  //       localStorage.removeItem("hasWon");
-  //     }
-  //   }
-  // }, [lastMessage]);
-
   useEffect(() => {
     if (lastMessage !== null) {
       const { book, nextUpdateTime, type, scores } = JSON.parse(
@@ -120,31 +61,6 @@ function App(): JSX.Element | null {
       if (scores) setScores(scores);
     }
   }, [lastMessage]);
-  // setTimeout(() => {
-  //   if (time) {
-  //     console.log("TIME", time);
-  //     const currTime = new Date();
-  //     const timeWhenCronFires = new Date(time);
-  //     const timeDiffInMs = timeWhenCronFires - currTime;
-  //     const timeDiffInMin = Math.floor(timeDiffInMs / 1000 / 60);
-  //     console.log("kjesdfl", timeDiffInMs);
-  //     setStringTime(calculateTime);
-  //   }
-  // }, 1000);
-  // useEffect(() => {
-  //   if (time && time > 0) {
-  //     setTimeout(() => {
-  //       setTime(time - 1);
-  //       setTimeLeft(calculateTime(time));
-  //     }, 1000);
-  //   }
-  // });
-  // useEffect(() => {
-  //   if (Object.keys(oneBook).length === 0) {
-  //     const book = dispatch(bookActions.getData());
-  //     setOneBook(book.payload);
-  //   }
-  // }, [setOneBook]);
   useEffect(() => {
     const localStorageWinStatus = localStorage.getItem("hasWon");
     if (localStorageWinStatus === "true") setHasWon(true);
@@ -157,12 +73,6 @@ function App(): JSX.Element | null {
       setLives(Number(localStorage.getItem("lives")));
     }
   }, [setLives]);
-  // useEffect(() => {
-  //   window.addEventListener("resize", detectSize);
-  //   return () => {
-  //     window.removeEventListener("resize", detectSize);
-  //   };
-  // }, [windowDimension]);
   const handleNewBook = (): void => {
     const book = dispatch(bookActions.uploadBook());
     setOneBook(book.payload);
@@ -223,7 +133,7 @@ function App(): JSX.Element | null {
     }
   }, [screenShake]);
   if (!oneBook) return null;
-  // console.log("oneBook", oneBook);
+  if (!time) return null;
   return (
     <>
       <div className="modal-container">
@@ -237,7 +147,7 @@ function App(): JSX.Element | null {
           }}
         >
           <div className="modal-content">
-            <p>👋 Hello! My name is Ali Ezzeddine and welcome to Blurrdle!</p>
+            <p>👋 Hello and welcome to Blurrdle!</p>
             <p>
               Blurrdle is a mash-up between the beloved game "Wordle" and all
               the other "dle" games like{" "}
@@ -262,11 +172,13 @@ function App(): JSX.Element | null {
                 href="https://www.gamedle.wtf/#"
                 target="_blank"
               >
-                Gamdle
+                Gamedle
               </a>
+              but based on books!
             </p>
             <p>
-              The objective is to guess the book based on clues in 5 guesses.
+              The objective is to guess the book based on clues and a blurry
+              image of the cover.
             </p>
             <h3>How to play:</h3>
             <ol>
