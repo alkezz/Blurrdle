@@ -7,7 +7,7 @@ import WinnerPage from "./WinnerPage/WinnerPage";
 import LoserPage from "./LoserPage/LoserPage";
 import ReturningWinner from "./ReturningWinner/ReturningWinner";
 import ReturningLoser from "./ReturningLoser/ReturningLoser";
-import CountdownTimer from "./CountdownTimer/CountdownTimer";
+import CountdownTimer from "./CountdownTimer/CountdownTimer.tsx";
 import InfoIcon from "@mui/icons-material/Info";
 import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
