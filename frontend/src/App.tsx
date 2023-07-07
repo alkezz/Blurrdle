@@ -173,7 +173,7 @@ function App(): JSX.Element | null {
                 target="_blank"
               >
                 Gamedle
-              </a>
+              </a>{" "}
               but based on books!
             </p>
             <p>
