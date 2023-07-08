@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface Props {
   nextTriggerTime: Date;
@@ -52,16 +53,30 @@ function CountdownTimer({ nextTriggerTime, setHasWon, setIsCorrect }: Props) {
       localStorage.setItem("hasWon", "has not played");
       localStorage.setItem("player_stats", JSON.stringify(playerStats));
       localStorage.setItem("lives", "5");
+      localStorage.setItem("hint", "0");
       setHasWon(null);
       setIsCorrect(false);
     }, 1000);
   }
   if (!nextTriggerTime) return null;
   return (
-    <h3>
-      Next Book Available in:{" "}
-      <span style={{ color: "yellow" }}>{timeDifference}</span>
-    </h3>
+    <>
+      <h3 style={{ cursor: "default" }}>
+        Next Book Available In:{" "}
+        {typeof timeDifference === "number" ? (
+          <CircularProgress size={21} sx={{ color: "yellow" }} />
+        ) : (
+          <span style={{ color: "yellow", cursor: "default" }}>
+            {timeDifference}
+          </span>
+        )}
+        {/* {typeof timeDifference === "string" && (
+          <span style={{ color: "yellow", cursor: "default" }}>
+            {timeDifference}
+          </span>
+        )} */}
+      </h3>
+    </>
   );
 }
 

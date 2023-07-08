@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Confetti from "react-confetti";
+import Paper from "@mui/material/Paper"
 
 const WinnerPage = ({ oneBook }) => {
     const [windowDimension, setWindowDimension] = useState({
@@ -24,10 +25,10 @@ const WinnerPage = ({ oneBook }) => {
                 width={windowDimension.width}
                 height={windowDimension.height}
             />
-            <h2>You got it!</h2>
-            <h2>
+            <h2 style={{ cursor: "default" }}>You got it!</h2>
+            <h2 style={{ cursor: "default" }}>
                 The correct answer was{" "}
-                <span style={{ color: "green" }}>{oneBook?.title}</span> by{" "}
+                <span style={{ color: "green", cursor: "default" }}>{oneBook?.title}</span> by{" "}
                 {oneBook?.author}!
             </h2>
             <div style={{ display: "flex" }}>
@@ -38,8 +39,16 @@ const WinnerPage = ({ oneBook }) => {
                         width: "100%",
                     }}
                 >
-                    <div className="left-hint">{oneBook?.hint_1}</div>
-                    <div className="left-hint">{oneBook?.hint_3}</div>
+                    <div className="left-hint-top">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={8}>
+                            {oneBook?.hint_1}
+                        </Paper>
+                    </div>
+                    <div className="left-hint-bottom">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                            {oneBook?.hint_3}
+                        </Paper>
+                    </div>
                 </div>
                 <div>
                     <img
@@ -55,16 +64,20 @@ const WinnerPage = ({ oneBook }) => {
                         width: "100%",
                     }}
                 >
-                    <div className="right-hint">
-                        {oneBook?.hint_2}. It was released in{" "}
-                        {oneBook?.release_year}
+                    <div className="right-hint-top">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                            {oneBook?.hint_2}. It was released in{" "}
+                            {oneBook?.release_year}
+                        </Paper>
                     </div>
-                    <div className="right-hint">
-                        It was written by {oneBook?.author}
+                    <div className="right-hint-bottom">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                            It was written by {oneBook?.author}
+                        </Paper>
                     </div>
                 </div>
             </div>
-            <h3 style={{ width: "50%" }}>{oneBook?.description}</h3>
+            <h3 style={{ width: "50%", cursor: "default" }}>{oneBook?.description}</h3>
         </div>
     )
 }

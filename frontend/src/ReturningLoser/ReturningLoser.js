@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react"
-
+import React from "react"
 import CountdownTimer from "../CountdownTimer/CountdownTimer.tsx"
+import Paper from "@mui/material/Paper"
 
 const ReturningLoser = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) => {
     return (
         <div className="guess-container">
-            <h2>
+            <h2 style={{ cursor: "default" }}>
                 You didn't get the answer today
                 <br />
-                {<CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />}
             </h2>
-            <h2>
+            <h2 style={{ cursor: "default" }}>
                 The correct answer was{" "}
-                <span style={{ color: "red" }}>{oneBook?.title}</span> by{" "}
+                <span style={{ color: "red", cursor: "default" }}>{oneBook?.title}</span> by{" "}
                 {oneBook?.author}
             </h2>
+            <CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />
             <div style={{ display: "flex" }}>
                 <div
                     style={{
@@ -23,8 +23,16 @@ const ReturningLoser = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) =
                         width: "350px",
                     }}
                 >
-                    <div className="left-hint">{oneBook?.hint_1}</div>
-                    <div className="left-hint">{oneBook?.hint_3}</div>
+                    <div className="left-hint-top">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={8}>
+                            {oneBook?.hint_1}
+                        </Paper>
+                    </div>
+                    <div className="left-hint-bottom">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                            {oneBook?.hint_3}
+                        </Paper>
+                    </div>
                 </div>
                 <div>
                     <img
@@ -40,16 +48,20 @@ const ReturningLoser = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) =
                         width: "350px",
                     }}
                 >
-                    <div className="right-hint">
-                        {oneBook?.hint_2}. It was released in{" "}
-                        {oneBook?.release_year}
+                    <div className="right-hint-top">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                            {oneBook?.hint_2} It was released in{" "}
+                            {oneBook?.release_year}.
+                        </Paper>
                     </div>
-                    <div className="right-hint">
-                        It was written by {oneBook?.author}
+                    <div className="right-hint-bottom">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                            It was written by {oneBook?.author}.
+                        </Paper>
                     </div>
                 </div>
             </div>
-            <p style={{ width: "50%" }}>{oneBook?.description}</p>
+            <p style={{ width: "50%", cursor: "default" }}>{oneBook?.description}</p>
         </div>
     )
 }

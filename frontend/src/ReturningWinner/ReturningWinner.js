@@ -1,25 +1,18 @@
-import React, { useState, useEffect } from "react"
 import CountdownTimer from "../CountdownTimer/CountdownTimer.tsx"
+import Paper from "@mui/material/Paper"
+
 const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) => {
     const playerStats = JSON.parse(localStorage.getItem("player_stats"));
     return (
         <div className="guess-container">
-            <h2 style={{ marginBottom: "-20px" }}>You got it {playerStats.guesses_today === 0 ? <span style={{ color: "green" }}>first try you book worm</span> : <span>in <span style={{ color: "green" }}>{playerStats.guesses_today}</span> guesses</span>}!</h2>
-            <h2>
+            <h2 style={{ marginBottom: "-20px", cursor: "default" }}>You got it {playerStats.guesses_today === 0 ? <span style={{ color: "green" }}>first try you book worm</span> : <span>in <span style={{ color: "green" }}>{playerStats.guesses_today}</span> guesses</span>}!</h2>
+            <h2 style={{ cursor: "default" }}>
                 The correct answer was{" "}
-                <span style={{ color: "green" }}>{oneBook?.title}</span> by{" "}
+                <span style={{ color: "green", cursor: "default" }}>{oneBook?.title}</span> by{" "}
                 {oneBook?.author}!
                 <br />
-                {<CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />}
             </h2>
-            {/* {localStorage.getItem("guesses") === "0" && (
-                <span>You needed no hints you book worm, nice job!</span>
-            )}
-            {localStorage.getItem("guesses") !== "0" && (
-                <span>
-                    You got it in {localStorage.getItem("guesses")} guesses.
-                </span>
-            )} */}
+            {<CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />}
             <br />
             <div style={{ display: "flex" }}>
                 <div
@@ -29,8 +22,16 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) 
                         width: "100%"
                     }}
                 >
-                    <div className="left-hint">{oneBook?.hint_1}</div>
-                    <div className="left-hint">{oneBook?.hint_3}</div>
+                    <div className="left-hint-top">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={8}>
+                            {oneBook?.hint_1}
+                        </Paper>
+                    </div>
+                    <div className="left-hint-bottom">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                            {oneBook?.hint_3}
+                        </Paper>
+                    </div>
                 </div>
                 <div>
                     <img
@@ -46,17 +47,21 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) 
                         width: "100%"
                     }}
                 >
-                    <div className="right-hint">
-                        {oneBook?.hint_2}. It was released in{" "}
-                        {oneBook?.release_year}
+                    <div className="right-hint-top">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                            {oneBook?.hint_2}. It was released in{" "}
+                            {oneBook?.release_year}
+                        </Paper>
                     </div>
-                    <div className="right-hint">
-                        It was written by {oneBook?.author}
+                    <div className="right-hint-bottom">
+                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                            It was written by {oneBook?.author}
+                        </Paper>
                     </div>
                 </div>
             </div>
-            <h3 style={{ width: "50%" }}>{oneBook?.description}</h3>
-        </div>
+            <h3 style={{ width: "50%", cursor: "default" }}>{oneBook?.description}</h3>
+        </div >
     )
 }
 export default ReturningWinner

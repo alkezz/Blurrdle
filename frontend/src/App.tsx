@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import MainPage from "./MainPage/MainPage";
 import WinnerPage from "./WinnerPage/WinnerPage";
 import LoserPage from "./LoserPage/LoserPage";
@@ -18,15 +17,6 @@ import "./App.css";
 
 function App(): JSX.Element | null {
   const { lastMessage } = useWebSocket("wss://blurrdle-backend.onrender.com");
-  const { sendJsonMessage } = useWebSocket(
-    "wss://blurrdle-backend.onrender.com"
-  );
-  const [windowDimension, setWindowDimension] = useState<object>({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-  const [scores, setScores] = useState<object>({});
-  const dispatch = useDispatch();
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
   const [oneBook, setOneBook] = useState<object>({});
   const [time, setTime] = useState<number>();
@@ -40,23 +30,13 @@ function App(): JSX.Element | null {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const [isHintOneVisible, setIsHintOneVisible] = useState<boolean>(false);
   const [isHintTwoVisible, setIsHintTwoVisible] = useState<boolean>(false);
-  const detectSize = (): void => {
-    setWindowDimension({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
-  };
   useEffect(() => {
     if (lastMessage !== null) {
-      const { book, nextUpdateTime, type, scores } = JSON.parse(
-        lastMessage.data
-      );
-      console.log("ewual", book, oneBook);
+      const { book, nextUpdateTime } = JSON.parse(lastMessage.data);
       if (book) setOneBook(book);
       if (nextUpdateTime) {
         setTime(nextUpdateTime);
       }
-      if (scores) setScores(scores);
     }
   }, [lastMessage]);
   useEffect(() => {
@@ -80,6 +60,11 @@ function App(): JSX.Element | null {
       setLives(Number(localStorage.getItem("lives")));
     }
   }, [setLives]);
+  useEffect(() => {
+    if (Number(localStorage.getItem("hint")) > 0) {
+      setShowHint(Number(localStorage.getItem("hint")));
+    }
+  }, [localStorage.getItem("hint"), setShowHint]);
   const handleModal = (): void => (open ? setOpen(false) : setOpen(true));
   const handleWin = (): void => {
     setIsCorrect(true);
@@ -89,10 +74,12 @@ function App(): JSX.Element | null {
     if (guesses === 0) {
       playerStats.perfect_guesses += 1;
       playerStats.guesses_today = guesses;
+      playerStats.games_played += 1;
       localStorage.setItem("player_stats", JSON.stringify(playerStats));
     } else {
       playerStats.guesses += guesses;
       playerStats.guesses_today = guesses;
+      playerStats.games_played += 1;
       localStorage.setItem("player_stats", JSON.stringify(playerStats));
     }
   };
@@ -101,6 +88,7 @@ function App(): JSX.Element | null {
     const playerStats = JSON.parse(localStorage.getItem("player_stats"));
     playerStats.guesses += 5;
     playerStats.guesses_today = 5;
+    playerStats.games_played += 1;
     localStorage.setItem("player_stats", JSON.stringify(playerStats));
   };
   const handleSubmit = (): void => {
@@ -117,7 +105,8 @@ function App(): JSX.Element | null {
       } else {
         setIsHintTwoVisible(true);
       }
-      setShowHint(showHint + 1);
+      localStorage.setItem("hint", (showHint + 1).toString());
+      setShowHint(Number(localStorage.getItem("hint")));
       setScreenShake(true);
       setUserGuess("");
       setTimeout(() => {
@@ -236,7 +225,7 @@ function App(): JSX.Element | null {
         </Modal>
       </div>
       <div className="abc">
-        <h1>
+        <h1 style={{ cursor: "default" }}>
           Welcome to Blurrdle! &nbsp;
           <Tooltip title="More Info">
             <InfoIcon
@@ -246,13 +235,6 @@ function App(): JSX.Element | null {
             />
           </Tooltip>
         </h1>
-        {hasWon === null && (
-          <CountdownTimer
-            nextTriggerTime={time}
-            setHasWon={setHasWon}
-            setIsCorrect={setIsCorrect}
-          />
-        )}
         <div className="full-page-container">
           {lives > 0 &&
             !isCorrect &&
@@ -273,7 +255,14 @@ function App(): JSX.Element | null {
           {lives > 0 && isCorrect && oneBook?.book_cover && hasWon === null && (
             <WinnerPage oneBook={oneBook} />
           )}
-          {lives === 0 && hasWon === null && <LoserPage oneBook={oneBook} />}
+          {lives === 0 && hasWon === null && (
+            <LoserPage
+              oneBook={oneBook}
+              nextTriggerTime={time}
+              setHasWon={setHasWon}
+              setIsCorrect={setIsCorrect}
+            />
+          )}
           {hasWon && (
             <ReturningWinner
               nextTriggerTime={time}
@@ -282,8 +271,22 @@ function App(): JSX.Element | null {
               oneBook={oneBook}
             />
           )}
-          {hasWon === false && <ReturningLoser oneBook={oneBook} />}
+          {hasWon === false && (
+            <ReturningLoser
+              oneBook={oneBook}
+              nextTriggerTime={time}
+              setHasWon={setHasWon}
+              setIsCorrect={setIsCorrect}
+            />
+          )}
         </div>
+        {hasWon === null && (
+          <CountdownTimer
+            nextTriggerTime={time}
+            setHasWon={setHasWon}
+            setIsCorrect={setIsCorrect}
+          />
+        )}
       </div>
     </>
   );
