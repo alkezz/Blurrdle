@@ -16,7 +16,7 @@ const AutocompleteSearchBox = ({ setInputValue, inputValue, setIsSelected, isSel
         setIsSelected(true)
     }
     useEffect(() => {
-        if (inputValue.length >= 2) {
+        if (inputValue.length >= 1) {
             filterOptions(inputValue);
         } else {
             setFilteredOptions([])
@@ -30,7 +30,7 @@ const AutocompleteSearchBox = ({ setInputValue, inputValue, setIsSelected, isSel
                 placeholder='Guess a book'
                 onChange={(e) => setInputValue(e.target.value)}
             />
-            {filteredOptions.length > 0 && (
+            {filteredOptions.length > 1 && (
                 <div className='filter-options'>
                     {filteredOptions.map(option => (
                         <span className='book-title-span' key={option.title} onClick={(e) => handleClick(option.title)}>
