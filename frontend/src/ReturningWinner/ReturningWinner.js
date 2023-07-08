@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react"
 import CountdownTimer from "../CountdownTimer/CountdownTimer.tsx"
 const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) => {
-
+    const playerStats = JSON.parse(localStorage.getItem("player_stats"));
     return (
         <div className="guess-container">
-            <h2 style={{ marginBottom: "-20px" }}>You got it {localStorage.getItem("guesses") === "0" ? <span style={{ color: "green" }}>first try you book worm</span> : <span>in <span style={{ color: "green" }}>{localStorage.getItem("guesses")}</span> guesses</span>}!</h2>
+            <h2 style={{ marginBottom: "-20px" }}>You got it {playerStats.guesses_today === 0 ? <span style={{ color: "green" }}>first try you book worm</span> : <span>in <span style={{ color: "green" }}>{playerStats.guesses_today}</span> guesses</span>}!</h2>
             <h2>
                 The correct answer was{" "}
                 <span style={{ color: "green" }}>{oneBook?.title}</span> by{" "}

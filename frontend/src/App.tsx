@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import "./App.css";
 import MainPage from "./MainPage/MainPage";
 import WinnerPage from "./WinnerPage/WinnerPage";
 import LoserPage from "./LoserPage/LoserPage";
@@ -15,8 +13,8 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import useWebSocket from "react-use-websocket";
-import * as bookActions from "./store/UpdateBook";
 import { v4 as uuidv4 } from "uuid";
+import "./App.css";
 
 function App(): JSX.Element | null {
   const { lastMessage } = useWebSocket("wss://blurrdle-backend.onrender.com");
@@ -53,9 +51,9 @@ function App(): JSX.Element | null {
       const { book, nextUpdateTime, type, scores } = JSON.parse(
         lastMessage.data
       );
+      console.log("ewual", book, oneBook);
       if (book) setOneBook(book);
       if (nextUpdateTime) {
-        console.log("UPDATE", nextUpdateTime);
         setTime(nextUpdateTime);
       }
       if (scores) setScores(scores);
@@ -67,35 +65,43 @@ function App(): JSX.Element | null {
     if (localStorageWinStatus === "false") setHasWon(false);
     if (!localStorage.getItem("player_id")) {
       localStorage.setItem("player_id", uuidv4());
+      const playerStats = {
+        perfect_guesses: 0,
+        games_played: 0,
+        guesses: 0,
+        guesses_today: 0,
+      };
+      localStorage.setItem("player_stats", JSON.stringify(playerStats));
+      // localStorage.setItem("perfect_guesses", "0")
+      // localStorage.setItem("games_played", "0")
       setOpen(true);
     }
     if (localStorage.getItem("lives")) {
       setLives(Number(localStorage.getItem("lives")));
     }
   }, [setLives]);
-  const handleNewBook = (): void => {
-    const book = dispatch(bookActions.uploadBook());
-    setOneBook(book.payload);
-  };
   const handleModal = (): void => (open ? setOpen(false) : setOpen(true));
   const handleWin = (): void => {
     setIsCorrect(true);
     localStorage.setItem("hasWon", "true");
     const guesses = 5 - lives;
-    localStorage.setItem("guesses", guesses.toString());
-    sendJsonMessage({
-      type: "updateScore",
-      playerId: localStorage.getItem("player_id"),
-      score: guesses,
-    });
+    const playerStats = JSON.parse(localStorage.getItem("player_stats"));
+    if (guesses === 0) {
+      playerStats.perfect_guesses += 1;
+      playerStats.guesses_today = guesses;
+      localStorage.setItem("player_stats", JSON.stringify(playerStats));
+    } else {
+      playerStats.guesses += guesses;
+      playerStats.guesses_today = guesses;
+      localStorage.setItem("player_stats", JSON.stringify(playerStats));
+    }
   };
   const handleLoss = (): void => {
     localStorage.setItem("hasWon", "false");
-    sendJsonMessage({
-      type: "updateScore",
-      playerId: localStorage.getItem("player_id"),
-      score: 0,
-    });
+    const playerStats = JSON.parse(localStorage.getItem("player_stats"));
+    playerStats.guesses += 5;
+    playerStats.guesses_today = 5;
+    localStorage.setItem("player_stats", JSON.stringify(playerStats));
   };
   const handleSubmit = (): void => {
     if (
@@ -180,20 +186,20 @@ function App(): JSX.Element | null {
               The objective is to guess the book based on clues and a blurry
               image of the cover.
             </p>
-            <h3>How to play:</h3>
+            <h3 style={{ marginBottom: "-10px" }}>How to play:</h3>
             <ol>
               <li>
                 You have 5 lives, every time you guess a book title wrong you
                 lose a life
               </li>
-              <li>You are given a blurry image of the book cover at first</li>
+              {/* <li>You are given a blurry image of the book cover at first</li> */}
               <li>
                 After each wrong guess a hint will appear. You will get 4 hints
                 including the book author
               </li>
             </ol>
-            Keep going until you either lose all your lives or you get the book
-            right. Good luck!
+            Keep going until you either lose all of your lives or you get the
+            book right. Good luck!
             <div>
               <br />
               <Tooltip title="Github" arrow>

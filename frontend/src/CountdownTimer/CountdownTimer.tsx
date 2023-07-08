@@ -8,7 +8,7 @@ interface Props {
 
 function CountdownTimer({ nextTriggerTime, setHasWon, setIsCorrect }: Props) {
   const [timeDifference, setTimeDifference] = useState<number | string>(0);
-  console.log(nextTriggerTime);
+  // console.log(nextTriggerTime);
   // Define a function to update the time difference
   const updateTimeDifference = () => {
     // Get the current time
@@ -45,16 +45,24 @@ function CountdownTimer({ nextTriggerTime, setHasWon, setIsCorrect }: Props) {
   }, [nextTriggerTime]);
   // console.log(timeDifference);
   if (timeDifference === "00:00:00") {
+    const playerStats = JSON.parse(localStorage.getItem("player_stats"));
+    playerStats.guesses_today = 0;
     setTimeout(() => {
       window.location.reload();
       localStorage.setItem("hasWon", "has not played");
-      localStorage.setItem("guesses", "0");
+      localStorage.setItem("player_stats", JSON.stringify(playerStats));
+      localStorage.setItem("lives", "5");
       setHasWon(null);
       setIsCorrect(false);
     }, 1000);
   }
   if (!nextTriggerTime) return null;
-  return <h3>Next Book Available in: <span style={{color: "yellow"}}>{timeDifference}</span></h3>;
+  return (
+    <h3>
+      Next Book Available in:{" "}
+      <span style={{ color: "yellow" }}>{timeDifference}</span>
+    </h3>
+  );
 }
 
 export default CountdownTimer;
