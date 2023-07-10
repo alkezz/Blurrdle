@@ -39,6 +39,7 @@ const ReturningLoser = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) =
                         alt="book cover"
                         className="no-blur"
                         src={oneBook?.book_cover}
+                        draggable="false"
                     />
                 </div>
                 <div

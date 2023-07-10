@@ -36,7 +36,7 @@ const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBoo
                 Submit
             </Button>
             <br />
-            <h2>Can you guess this book?</h2>
+            <h2 style={{ cursor: "default" }}>Can you guess this book?</h2>
             <div style={{ display: "flex" }}>
                 <div
                     style={{
@@ -68,6 +68,7 @@ const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBoo
                         alt="book cover"
                         className="no-blur"
                         src={oneBook?.blurred_cover}
+                        draggable="false"
                     />
                 </div>
                 &nbsp;
