@@ -1,18 +1,25 @@
 # Blurrdle
 
-### Blurrdle is a mash up between the beloved game "Wordle" and all the other "dle" games like [Global](https://globle-game.com/), [Tradle](https://oec.world/en/tradle/), and [Gamedle](https://www.gamedle.wtf/#).
+### Blurrdle is a mash-up between the beloved game "Wordle" and all the other "dle" games like [Global](https://globle-game.com/), [Tradle](https://oec.world/en/tradle/), and [Gamedle](https://www.gamedle.wtf/#).
 
-#### The primary objective of this game is to guess the book right in 5 attempts. After each wrong guess a hint will appear to help guide you towards the right answer. After 24 hours a new book is chosen from a JSON file pulled from my S3 bucket and sent to the front end using WebSockets
+#### The primary objective of this game is to guess the book right in 5 attempts. After each wrong guess a hint will help guide you towards the correct answer. After 24 hours a new book is chosen from a JSON file pulled from my S3 bucket and sent to the front end using WebSockets
 
-Built using JavaScript, TypeScript, React, and WebSockets in the front end. In the back end to schedule a new book being chosen every 24 hours I used the cron package to pull data every time it fires, sends it to the front end to update the book, and removes that book from the JSON file to send back to my S3 bucket. I used a combination of Node.js, Express, and WebSockets to achieve the desired result
+Blurrdle is built using JavaScript, TypeScript, React, and WebSockets in the front end. In the back end, a scheduling mechanism is implemented using the cron package to select a new book every 24 hours. The application pulls data using the cron job, updates the book on the front end, and removes the selected book from the JSON file before sending it back to the S3 bucket. To achieve this functionality, a combination of Node.js and WebSockets is used.
 
 ## Features
-  * Currently, Blurrdle uses localStorage to track and manage user activity, including tracking if users have already played today's Blurrdle and their guesses for improved user experience.
-  * After a win or loss, WebSockets will send your player_id, your score, and your time to the back end. The back end then will check whether your score is larger than the score saved and will replace it if it does and will do the same thing with the time it took you to finish.
+Blurrdle utilizes `localStorage` to effectively track and manage user activity. The following variables are employed for this purpose:
+
+- `Hint`: Keeps track of the hint number the user was on when they left or when the page was reloaded.
+- `hasWon`: Indicates whether the user has played today's Blurrdle and whether they won or lost.
+- `Lives`: Maintains the current session's count of the user's lives to ensure consistency upon page refresh.
+- `Player_stats`: Tracks various player statistics, including perfect games, career guesses, guesses made today, and the total number of Blurrdles played.
+
+By leveraging `localStorage`, Blurrdle ensures a seamless user experience by persistently storing and retrieving these essential data points. ![image](https://github.com/alkezz/Blurrdle/assets/105993056/e3f910de-a35e-4fb3-96aa-7739a5da35b8)
+
+Blurrdle also uses the AWS S3 framework to allow seamless integration and self-sufficiency within the app. In back end of Blurrdle, a JSON file is pulled from my S3 Bucket 
 
 ## Limitations
-  * Due to the small playerbase I decided to use WebSockets to more efficiently handle data but that comes at a caveat where the larger my playerbase grows the longer it will take to query my back end. In the future, I will rework my back end to create a database using PostgreSQL or a cloud based DynamoDB using AWS.
-  * Also due to my small playerbase localStorage seemed like a good option to track players who enter my application. The first time a player enters they are given a player_id using uuid. After you win or lose, localStorage will update to include 2 Key Value Pairs, `"hasWon"` which will hold either `true` or `false` and `"guesses"` which holds the amount of attempts it took you to guess the book correctly. The limitation comes from users being able to clear their localStorage which would lose all the progress they've made and can lead to "cheating". As my playerbase grows I will move away from localStorage and again use a database to track users more efficiently and securely.
+  * Due to my small player base localStorage seemed like a good option to track players who enter my application. The first time a player enters they are given a player_id using uuid. After you win or lose, localStorage will update to include 2 Key Value Pairs, `"hasWon"` which will hold either `true` or `false` and `"guesses"` which holds the amount of attempts it took you to guess the book correctly. The limitation comes from users being able to clear their localStorage which would lose all the progress they've made and can lead to "cheating".
 
 ## Installation
 To install Blurrdle to your local machine follow these steps:
@@ -51,7 +58,6 @@ To install Blurrdle to your local machine follow these steps:
 
  ## Upcoming Features
 In the future, I plan on implementing GPT3 to make my life a bit easier when it comes to creating objects for each book. In a perfect world, I would pass in a book title to GPT3 in my back end and a prompt to create a JSON object. The response will be a book object with the key value pairs mentioned above that I can then send to my front end.
-As mentioned in my "Limitations" a database will be implemented in the near future to secure data from both bad actors and loss.
 
 ## Example Code
  * app.js
@@ -69,35 +75,10 @@ As mentioned in my "Limitations" a database will be implemented in the near futu
 We then select the first book from the randomized array by using `Array.shift()` which will extract the book data as well as removing it from my JSON file that I send back
 <br/>
 The WebSocket then connects to my application and sends the selected book and time remaining to my front end React App.
-`const objToSend = { book: selectedBook, timeRemaining: 60 };` `socket.send(JSON.stringify(objToSend));`
+`const objToSend = { book: selectedBook, nextUpdateTime };` `socket.send(JSON.stringify(objToSend));`
 
-I have logic to also send data from my frontend to my backend once a game is complete, which is the `player_id`, their score, and their time.
 
-If they don't exist in my backend dictionary:
-```
-if (!scores[playerId]) {
-   scores[playerId] = {
-    bestGuess: attempts,
-    best_time: time,
-    firstTry: 0
-  }
-}
-```
-We set a key value pair of the player_id in scores and that player_id object stores info about that player
-
-If they already exist we then just update their reference object to the new values IF they satisfy the conditions
-
-```
-else {
-  scores[playerId] = {
-    bestGuess: attempts > 0 && attempts > this.bestGuess ? attempts : this.bestGuess,
-    best_time: best_time > this.best_time ? best_time : this.best_time,
-    firstTry: firstTry ? this.firstTry++ : this.firstTry
-  }
-}
-```
 We then send our new JSON file with the selected book removed back to my S3 bucket to redo the process the next day!
-
 ```
 s3.putObject(
  {
@@ -114,10 +95,10 @@ s3.putObject(
 );
 ```
 
-## Full Back end Cron Schedule Code
+## Full Back End Cron Schedule Code
 
 ```
-cron.schedule('* * * * *', () => {
+const cronJob = new CronJob('0 0 * * *', () => {
     // Read JSON file from S3
     s3.getObject({ Bucket: process.env.AWS_BUCKET_NAME, Key: 'bookData.json' }, (err, data) => {
         if (err) {
@@ -129,41 +110,12 @@ cron.schedule('* * * * *', () => {
             let selectedBook = bookObj.Books.shift() // Select and remove the first book object
             wss.on('connection', (socket) => { // Connecting to WebSocket
                 console.log('WebSocket client connected');
+                const nextUpdateTime = new Date(cronJob.nextDates())
                 // Creating an obj to send consisting of the book and time remaining before the next book
-                const objToSend = { book: selectedBook, timeRemaining: 60 };
+                const objToSend = { book: selectedBook, nextUpdateTime };
                 // Sending the book selected from above to send to the front end
                 socket.send(JSON.stringify(objToSend));
 
-                // Set up a message event listener for the WebSocket client
-                socket.on('message', (message) => {
-                    try {
-                        const data = JSON.parse(message);
-                        const { type, playerId, attempts, time, firstTry } = data;
-
-                        if (type === 'updateScore') {
-                            // Update the player's score in the dictionary
-                            if (!scores[playerId]) {
-                                scores[playerId] = {
-                                    bestGuess: attempts,
-                                    best_time: time,
-                                    firstTry: 0
-                                }
-                            } else {
-                                scores[playerId] = {
-                                    bestGuess: attempts > 0 && attempts > this.bestGuess ? attempts : this.bestGuess,
-                                    best_time: best_time > this.best_time ? best_time : this.best_time,
-                                    firstTry: firstTry ? this.firstTry++ : this.firstTry
-                                }
-                            }
-
-                            // Send the updated score only to the corresponding client
-                            socket.send(JSON.stringify({ type: 'score', scores: scores[playerId] }));
-                        }
-
-                    } catch (error) {
-                        console.error('Error parsing message:', error);
-                    }
-                })
                 // Set up a close event listener for the WebSocket client
                 socket.on('close', () => {
                     console.log('WebSocket client disconnected');
@@ -184,7 +136,7 @@ cron.schedule('* * * * *', () => {
             );
         }
     });
-});
+}, null, true);
 ```
 ## Contact Me
 If there's anything you think might be beneficial to add to the application or a glaring bug please don't be afraid to contact me!
