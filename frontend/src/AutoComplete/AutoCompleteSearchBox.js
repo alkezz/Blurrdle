@@ -45,14 +45,13 @@ const AutocompleteSearchBox = ({ setInputValue, inputValue, setIsSelected, isSel
         };
     }, []);
     return (
-        <div style={{ width: "650px" }}>
+        <div ref={componentRef} style={{ width: "650px" }}>
             <input
                 type="text"
                 value={inputValue}
                 placeholder='Guess a book'
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                ref={componentRef}
             />
             {filteredOptions.length > 4 && !isSelected && (
                 <div className='filter-options-scroll'>
