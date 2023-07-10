@@ -41,8 +41,13 @@ function App(): JSX.Element | null {
   }, [lastMessage]);
   useEffect(() => {
     const localStorageWinStatus = localStorage.getItem("hasWon");
-    if (localStorageWinStatus === "true") setHasWon(true);
-    if (localStorageWinStatus === "false") setHasWon(false);
+    if (localStorageWinStatus === "true") {
+      setHasWon(true);
+    } else if (localStorageWinStatus === "false") {
+      setHasWon(false);
+    } else {
+      setHasWon(null);
+    }
     if (!localStorage.getItem("player_id")) {
       localStorage.setItem("player_id", uuidv4());
       const playerStats = {

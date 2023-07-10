@@ -3,7 +3,6 @@ import AutocompleteSearchBox from "../AutoComplete/AutoCompleteSearchBox";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Paper from "@mui/material/Paper"
-import SendIcon from '@mui/icons-material/Send';
 import Button from '@mui/material/Button';
 
 const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBook, showHint, screenShake, lives, handleSubmit }) => {
