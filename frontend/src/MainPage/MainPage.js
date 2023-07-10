@@ -1,14 +1,22 @@
-import React from "react"
+import React, { useEffect } from "react"
 import AutocompleteSearchBox from "../AutoComplete/AutoCompleteSearchBox";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Paper from "@mui/material/Paper"
 import Button from '@mui/material/Button';
 
-const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBook, showHint, screenShake, lives, handleSubmit }) => {
-
+const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBook, showHint, screenShake, lives, handleSubmit, isError }) => {
+    useEffect(() => {
+        const errorSpan = document.getElementById("error-span")
+        if (isError) {
+            errorSpan.style.visibility = "visible"
+        } else {
+            errorSpan.style.visibility = "hidden"
+        }
+    }, [isError])
     return (
         <div className="guess-container">
+            <span style={{ visibility: "hidden", color: "red" }} id='error-span'>Please Enter a valid book!</span>
             <AutocompleteSearchBox
                 isSelected={isSelected}
                 setIsSelected={setIsSelected}
@@ -93,7 +101,6 @@ const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBoo
                 {[...Array(lives)].map((_, i) => (
                     <FavoriteIcon sx={{ color: "red", fontSize: "30px" }} />
                 ))}
-                {screenShake && <span className="falling-number">-1</span>}
             </div>
         </div>
     )

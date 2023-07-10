@@ -60,7 +60,7 @@ function CountdownTimer({ nextTriggerTime, setHasWon, setIsCorrect }: Props) {
   }
   if (!nextTriggerTime) return null;
   return (
-    <>
+    <div style={{ marginTop: "-35px" }}>
       <h3 style={{ cursor: "default" }}>
         Next Book Available In:{" "}
         {typeof timeDifference === "number" ? (
@@ -70,13 +70,8 @@ function CountdownTimer({ nextTriggerTime, setHasWon, setIsCorrect }: Props) {
             {timeDifference}
           </span>
         )}
-        {/* {typeof timeDifference === "string" && (
-          <span style={{ color: "yellow", cursor: "default" }}>
-            {timeDifference}
-          </span>
-        )} */}
       </h3>
-    </>
+    </div>
   );
 }
 

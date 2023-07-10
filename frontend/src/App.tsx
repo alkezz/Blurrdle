@@ -30,6 +30,7 @@ function App(): JSX.Element | null {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const [isHintOneVisible, setIsHintOneVisible] = useState<boolean>(false);
   const [isHintTwoVisible, setIsHintTwoVisible] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
   useEffect(() => {
     if (lastMessage !== null) {
       const { book, nextUpdateTime } = JSON.parse(lastMessage.data);
@@ -97,12 +98,13 @@ function App(): JSX.Element | null {
     localStorage.setItem("player_stats", JSON.stringify(playerStats));
   };
   const handleSubmit = (): void => {
+    if (isError) setIsError(false);
     if (
       inputValue &&
       inputValue.toLowerCase() === oneBook?.title.toLowerCase()
     ) {
       handleWin();
-    } else if (lives > 1) {
+    } else if (inputValue && lives > 1) {
       setLives(lives - 1);
       localStorage.setItem("lives", (lives - 1).toString());
       if (!isHintOneVisible) {
@@ -117,9 +119,15 @@ function App(): JSX.Element | null {
       setTimeout(() => {
         setScreenShake(false);
       }, 500);
-    } else {
+    } else if (inputValue && lives <= 1) {
       setLives(lives - 1);
       handleLoss();
+    } else {
+      setIsError(true);
+      setScreenShake(true);
+      setTimeout(() => {
+        setScreenShake(false);
+      }, 500);
     }
     setInputValue("");
     setIsSelected(false);
@@ -255,6 +263,7 @@ function App(): JSX.Element | null {
                 screenShake={screenShake}
                 lives={lives}
                 handleSubmit={handleSubmit}
+                isError={isError}
               />
             )}
           {lives > 0 && isCorrect && oneBook?.book_cover && hasWon === null && (
