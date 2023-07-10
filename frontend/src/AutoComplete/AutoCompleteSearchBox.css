@@ -1,4 +1,4 @@
-.filter-options {
+.filter-options-scroll {
   background-color: white;
   color: black;
   display: flex;
@@ -8,6 +8,16 @@
   z-index: 9999;
   height: 100px;
   overflow-y: scroll;
+}
+.filter-options-noscroll {
+  background-color: white;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  width: 657px;
+  position: absolute;
+  z-index: 9999;
+  height: fit-content;
 }
 input {
   width: 100%;
