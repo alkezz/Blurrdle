@@ -23,12 +23,12 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) 
                     }}
                 >
                     <div className="left-hint-top">
-                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={8}>
+                        <Paper sx={{ backgroundColor: "#32354F", color: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10px", paddingRight: "10px" }} elevation={8}>
                             {oneBook?.hint_1}
                         </Paper>
                     </div>
                     <div className="left-hint-bottom">
-                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                        <Paper sx={{ backgroundColor: "#32354F", color: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10px", paddingRight: "10px" }} elevation={8}>
                             {oneBook?.hint_3}
                         </Paper>
                     </div>
@@ -48,13 +48,13 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) 
                     }}
                 >
                     <div className="right-hint-top">
-                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
-                            {oneBook?.hint_2}. It was released in{" "}
+                        <Paper sx={{ backgroundColor: "#32354F", color: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10px", paddingRight: "10px" }} elevation={8}>
+                            {oneBook?.hint_2} It was released in{" "}
                             {oneBook?.release_year}
                         </Paper>
                     </div>
                     <div className="right-hint-bottom">
-                        <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                        <Paper sx={{ backgroundColor: "#32354F", color: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }} elevation={8}>
                             It was written by {oneBook?.author}
                         </Paper>
                     </div>

@@ -1,7 +1,10 @@
 import React from "react"
 import AutocompleteSearchBox from "../AutoComplete/AutoCompleteSearchBox";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Paper from "@mui/material/Paper"
+import SendIcon from '@mui/icons-material/Send';
+import Button from '@mui/material/Button';
 
 const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBook, showHint, screenShake, lives, handleSubmit }) => {
 
@@ -14,9 +17,17 @@ const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBoo
                 setInputValue={setInputValue}
             />
             <br />
-            <button className="submit-button" onClick={handleSubmit}>
+            <Button sx={{
+                ':hover': {
+                    bgcolor: 'white', // theme.palette.primary.main
+                    color: 'black'
+                },
+                backgroundColor: "white",
+                color: "black",
+                fontWeight: "550"
+            }} onClick={handleSubmit} variant="contained" endIcon={<ArrowForwardIcon />}>
                 Submit
-            </button>
+            </Button>
             <button className="submit-button" onClick={() => localStorage.clear()}>
                 Clear LS
             </button>
@@ -32,14 +43,14 @@ const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBoo
                 >
                     {(showHint >= 1 || Number(localStorage.getItem("hint")) >= 1) && (
                         <div className="left-hint-top">
-                            <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={8}>
+                            <Paper sx={{ backgroundColor: "#32354F", color: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10px", paddingRight: "10px" }} elevation={8}>
                                 {oneBook?.hint_1}
                             </Paper>
                         </div>
                     )}
                     {(showHint >= 3 || Number(localStorage.getItem("hint")) >= 3) && (
                         <div className="left-hint-bottom">
-                            <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                            <Paper sx={{ backgroundColor: "#32354F", color: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10px", paddingRight: "10px" }} elevation={8}>
                                 {oneBook?.hint_3}
                             </Paper>
                         </div>
@@ -62,20 +73,20 @@ const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBoo
                     style={{
                         display: "flex",
                         flexDirection: "column",
-                        width: "350px",
+                        width: "350px"
                     }}
                 >
                     {(showHint >= 2 || Number(localStorage.getItem("hint")) >= 2) && (
                         <div className="right-hint-top">
-                            <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
-                                {oneBook?.hint_2}. It was released in{" "}
+                            <Paper sx={{ backgroundColor: "#32354F", color: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10px", paddingRight: "10px" }} elevation={8}>
+                                {oneBook?.hint_2} It was released in{" "}
                                 {oneBook?.release_year}
                             </Paper>
                         </div>
                     )}
                     {(showHint >= 4 || Number(localStorage.getItem("hint")) >= 4) && (
                         <div className="right-hint-bottom">
-                            <Paper sx={{ backgroundColor: "#1f244a", color: "white", padding: "15px" }} variant="outlined" elevation={3}>
+                            <Paper sx={{ backgroundColor: "#32354F", color: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }} elevation={8}>
                                 It was written by {oneBook?.author}
                             </Paper>
                         </div>
