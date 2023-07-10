@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react"
+import CountdownTimer from "../CountdownTimer/CountdownTimer.tsx"
 import Confetti from "react-confetti";
 import Paper from "@mui/material/Paper"
 
-const WinnerPage = ({ oneBook }) => {
+const WinnerPage = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect }) => {
     const [windowDimension, setWindowDimension] = useState({
         width: window.innerWidth,
         height: window.innerHeight,
@@ -31,6 +32,7 @@ const WinnerPage = ({ oneBook }) => {
                 <span style={{ color: "green", cursor: "default" }}>{oneBook?.title}</span> by{" "}
                 {oneBook?.author}!
             </h2>
+            {<CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />}
             <div style={{ display: "flex" }}>
                 <div
                     style={{

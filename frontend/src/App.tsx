@@ -253,7 +253,12 @@ function App(): JSX.Element | null {
               />
             )}
           {lives > 0 && isCorrect && oneBook?.book_cover && hasWon === null && (
-            <WinnerPage oneBook={oneBook} />
+            <WinnerPage
+              oneBook={oneBook}
+              nextTriggerTime={time}
+              setHasWon={setHasWon}
+              setIsCorrect={setIsCorrect}
+            />
           )}
           {lives === 0 && hasWon === null && (
             <LoserPage

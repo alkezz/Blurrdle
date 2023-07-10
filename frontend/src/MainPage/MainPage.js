@@ -28,9 +28,6 @@ const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBoo
             }} onClick={handleSubmit} variant="contained" endIcon={<ArrowForwardIcon />}>
                 Submit
             </Button>
-            <button className="submit-button" onClick={() => localStorage.clear()}>
-                Clear LS
-            </button>
             <br />
             <h2>Can you guess this book?</h2>
             <div style={{ display: "flex" }}>
