@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import data from "../BookData/bookData.json"
+import bookTitles from "../assets/unique_books.json"
 import "./AutoCompleteSearchBox.css"
 
 const AutocompleteSearchBox = ({ setInputValue, inputValue, setIsSelected, isSelected }) => {
     const [filteredOptions, setFilteredOptions] = useState([]);
     const componentRef = useRef(null);
     const filterOptions = (input) => {
-        const filtered = data.Books.filter(option =>
+        const filtered = bookTitles.Books.filter(option =>
             option.title.toLowerCase().includes(input.toLowerCase())
         );
         setFilteredOptions(filtered);
