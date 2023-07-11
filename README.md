@@ -16,8 +16,6 @@ Blurrdle utilizes `localStorage` to effectively track and manage user activity. 
 
 By leveraging `localStorage`, Blurrdle ensures a seamless user experience by persistently storing and retrieving these essential data points. ![image](https://github.com/alkezz/Blurrdle/assets/105993056/e3f910de-a35e-4fb3-96aa-7739a5da35b8)
 
-Blurrdle also uses the AWS S3 framework to allow seamless integration and self-sufficiency within the app. In back end of Blurrdle, a JSON file is pulled from my S3 Bucket 
-
 ## Limitations
   * Due to my small player base localStorage seemed like a good option to track players who enter my application. The first time a player enters they are given a player_id using uuid. After you win or lose, localStorage will update to include 2 Key Value Pairs, `"hasWon"` which will hold either `true` or `false` and `"guesses"` which holds the amount of attempts it took you to guess the book correctly. The limitation comes from users being able to clear their localStorage which would lose all the progress they've made and can lead to "cheating".
 
