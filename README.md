@@ -1,6 +1,6 @@
 # Blurrdle
 
-### Blurrdle is a mash-up between the beloved game "Wordle" and all the other "dle" games like [Global](https://globle-game.com/), [Tradle](https://oec.world/en/tradle/), and [Gamedle](https://www.gamedle.wtf/#).
+### [Blurrdle](https://blurrdle.onrender.com/) is a mash-up between the beloved game "Wordle" and all the other "dle" games like [Global](https://globle-game.com/), [Tradle](https://oec.world/en/tradle/), and [Gamedle](https://www.gamedle.wtf/#).
 
 #### The primary objective of this game is to guess the book right in 5 attempts. After each wrong guess a hint will help guide you towards the correct answer. After 24 hours a new book is chosen from a JSON file pulled from my S3 bucket and sent to the front end using WebSockets
 
