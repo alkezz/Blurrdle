@@ -1,0 +1,30 @@
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #1e2030;
+  width: 400px;
+  /* margin-left: 550px; */
+  margin-top: 100px;
+  padding: 30px;
+  border-radius: 15px;
+}
+.raw-stats {
+  display: flex;
+  flex-direction: row;
+  align-self: flex-start;
+}
+.stat-headers {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+}
+.stat-numbers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: fit-content;
+}
+.circle-progress {
+  height: 55px;
+}

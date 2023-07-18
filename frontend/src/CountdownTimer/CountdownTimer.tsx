@@ -31,7 +31,7 @@ function CountdownTimer({ nextTriggerTime, setHasWon, setIsCorrect }: Props) {
     const hours = Math.floor(difference / 1000 / 60 / 60);
 
     // Format the time difference as "HH:MM:SS"
-    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+    const formattedTime = `${hours.toString()}:${minutes
       .toString()
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 

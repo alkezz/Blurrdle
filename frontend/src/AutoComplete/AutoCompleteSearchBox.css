@@ -30,6 +30,7 @@ input {
   display: flex;
 }
 .book-title-span:hover {
-  background-color: rgb(180, 180, 180);
+  background-color: #32354f;
+  color: white;
   cursor: pointer;
 }

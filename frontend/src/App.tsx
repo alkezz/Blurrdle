@@ -6,11 +6,13 @@ import ReturningWinner from "./ReturningWinner/ReturningWinner";
 import ReturningLoser from "./ReturningLoser/ReturningLoser";
 import CountdownTimer from "./CountdownTimer/CountdownTimer.tsx";
 import InfoIcon from "@mui/icons-material/Info";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
+import Grow from "@mui/material/Grow";
 import useWebSocket from "react-use-websocket";
 import { v4 as uuidv4 } from "uuid";
 import "./App.css";
@@ -31,6 +33,7 @@ function App(): JSX.Element | null {
   const [isHintOneVisible, setIsHintOneVisible] = useState<boolean>(false);
   const [isHintTwoVisible, setIsHintTwoVisible] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const [showStats, setShowStats] = useState<boolean>(false);
   useEffect(() => {
     if (
       localStorage.getItem("timeLeft") &&
@@ -77,8 +80,13 @@ function App(): JSX.Element | null {
         games_played: 0,
         guesses: 0,
         guesses_today: 0,
+        wins: 0,
+        win_streak: 0,
+        max_streak: 0,
       };
+      const pastGames = [];
       localStorage.setItem("player_stats", JSON.stringify(playerStats));
+      localStorage.setItem("past_games", JSON.stringify(pastGames));
       // localStorage.setItem("perfect_guesses", "0")
       // localStorage.setItem("games_played", "0")
       setOpen(true);
@@ -98,21 +106,28 @@ function App(): JSX.Element | null {
     localStorage.setItem("hasWon", "true");
     const guesses = 5 - lives;
     const playerStats = JSON.parse(localStorage.getItem("player_stats"));
+    const pastGames = JSON.parse(localStorage.getItem("past_games"));
+    playerStats.wins += 1;
+    playerStats.win_streak += 1;
+    if (playerStats.win_streak > playerStats.max_streak)
+      playerStats.max_streak = playerStats.win_streak;
     if (guesses === 0) {
       playerStats.perfect_guesses += 1;
       playerStats.guesses_today = guesses;
       playerStats.games_played += 1;
-      localStorage.setItem("player_stats", JSON.stringify(playerStats));
     } else {
       playerStats.guesses += guesses;
       playerStats.guesses_today = guesses;
       playerStats.games_played += 1;
-      localStorage.setItem("player_stats", JSON.stringify(playerStats));
     }
+    pastGames.push(playerStats);
+    localStorage.setItem("player_stats", JSON.stringify(playerStats));
+    localStorage.setItem("past_games", JSON.stringify(pastGames));
   };
   const handleLoss = (): void => {
     localStorage.setItem("hasWon", "false");
     const playerStats = JSON.parse(localStorage.getItem("player_stats"));
+    playerStats.win_streak = 0;
     playerStats.guesses += 5;
     playerStats.guesses_today = 5;
     playerStats.games_played += 1;
@@ -175,87 +190,89 @@ function App(): JSX.Element | null {
             height: "fit-content",
           }}
         >
-          <div className="modal-content">
-            <p>👋 Hello and welcome to Blurrdle!</p>
-            <p>
-              Blurrdle is a mash-up between the beloved game "Wordle" and all
-              the other "dle" games like{" "}
-              <a
-                rel="noreferrer"
-                href="https://globle-game.com/"
-                target="_blank"
-              >
-                Globle
-              </a>
-              ,{" "}
-              <a
-                rel="noreferrer"
-                href="https://oec.world/en/tradle/"
-                target="_blank"
-              >
-                Tradle
-              </a>
-              , and{" "}
-              <a
-                rel="noreferrer"
-                href="https://www.gamedle.wtf/#"
-                target="_blank"
-              >
-                Gamedle
-              </a>{" "}
-              but based on books!
-            </p>
-            <p>
-              The objective is to guess the book based on clues and a blurry
-              image of the cover.
-            </p>
-            <h3 style={{ marginBottom: "-10px" }}>How to play:</h3>
-            <ol>
-              <li>
-                You have 5 lives, every time you guess a book title wrong you
-                lose a life
-              </li>
-              {/* <li>You are given a blurry image of the book cover at first</li> */}
-              <li>
-                After each wrong guess a hint will appear. You will get 4 hints
-                including the book author
-              </li>
-            </ol>
-            Keep going until you either lose all of your lives or you get the
-            book right. Good luck!
-            <div>
-              <br />
-              <Tooltip title="Github" arrow>
+          <Grow in={open}>
+            <div className="modal-content">
+              <p>👋 Hello and welcome to Blurrdle!</p>
+              <p>
+                Blurrdle is a mash-up between the beloved game "Wordle" and all
+                the other "dle" games like{" "}
                 <a
                   rel="noreferrer"
-                  href="https://www.github.com/alkezz"
+                  href="https://globle-game.com/"
                   target="_blank"
                 >
-                  <GitHubIcon sx={{ fontSize: "28px" }} />
+                  Globle
                 </a>
-              </Tooltip>
-              &nbsp; &nbsp; &nbsp;
-              <Tooltip title="LinkedIn" arrow>
+                ,{" "}
                 <a
                   rel="noreferrer"
-                  href="https://www.linkedin.com/in/ali-k-ezzeddine"
+                  href="https://oec.world/en/tradle/"
                   target="_blank"
                 >
-                  <LinkedInIcon sx={{ fontSize: "28px" }} />
+                  Tradle
                 </a>
-              </Tooltip>
-              &nbsp; &nbsp; &nbsp;
-              <Tooltip title="Portfolio" arrow>
+                , and{" "}
                 <a
                   rel="noreferrer"
-                  href="https://www.ali-ezzeddine.com"
+                  href="https://www.gamedle.wtf/#"
                   target="_blank"
                 >
-                  <NewReleasesIcon sx={{ fontSize: "28px" }} />
-                </a>
-              </Tooltip>
+                  Gamedle
+                </a>{" "}
+                but based on books!
+              </p>
+              <p>
+                The objective is to guess the book based on clues and a blurry
+                image of the cover.
+              </p>
+              <h3 style={{ marginBottom: "-10px" }}>How to play:</h3>
+              <ol>
+                <li>
+                  You have 5 lives, every time you guess a book title wrong you
+                  lose a life
+                </li>
+                {/* <li>You are given a blurry image of the book cover at first</li> */}
+                <li>
+                  After each wrong guess a hint will appear. You will get 4
+                  hints including the book author
+                </li>
+              </ol>
+              Keep going until you either lose all of your lives or you get the
+              book right. Good luck!
+              <div>
+                <br />
+                <Tooltip title="Github" arrow>
+                  <a
+                    rel="noreferrer"
+                    href="https://www.github.com/alkezz"
+                    target="_blank"
+                  >
+                    <GitHubIcon sx={{ fontSize: "28px" }} />
+                  </a>
+                </Tooltip>
+                &nbsp; &nbsp; &nbsp;
+                <Tooltip title="LinkedIn" arrow>
+                  <a
+                    rel="noreferrer"
+                    href="https://www.linkedin.com/in/ali-k-ezzeddine"
+                    target="_blank"
+                  >
+                    <LinkedInIcon sx={{ fontSize: "28px" }} />
+                  </a>
+                </Tooltip>
+                &nbsp; &nbsp; &nbsp;
+                <Tooltip title="Portfolio" arrow>
+                  <a
+                    rel="noreferrer"
+                    href="https://www.ali-ezzeddine.com"
+                    target="_blank"
+                  >
+                    <NewReleasesIcon sx={{ fontSize: "28px" }} />
+                  </a>
+                </Tooltip>
+              </div>
             </div>
-          </div>
+          </Grow>
         </Modal>
       </div>
       <div className="abc">
@@ -266,6 +283,14 @@ function App(): JSX.Element | null {
               className="info-icon"
               onClick={handleModal}
               sx={{ cursor: "pointer" }}
+            />
+          </Tooltip>
+          &nbsp;
+          <Tooltip title="Stats">
+            <LeaderboardIcon
+              onClick={(e) => setShowStats(true)}
+              sx={{ cursor: "pointer" }}
+              className="info-icon"
             />
           </Tooltip>
         </h1>
@@ -309,6 +334,8 @@ function App(): JSX.Element | null {
               setHasWon={setHasWon}
               setIsCorrect={setIsCorrect}
               oneBook={oneBook}
+              showStats={showStats}
+              setShowStats={setShowStats}
             />
           )}
           {hasWon === false && (
