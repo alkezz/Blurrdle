@@ -33,7 +33,7 @@ function App(): JSX.Element | null {
   const [isHintOneVisible, setIsHintOneVisible] = useState<boolean>(false);
   const [isHintTwoVisible, setIsHintTwoVisible] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [showStats, setShowStats] = useState<boolean>(false);
+  const [showStats, setShowStats] = useState<boolean>(true);
   useEffect(() => {
     if (
       localStorage.getItem("timeLeft") &&
@@ -318,6 +318,8 @@ function App(): JSX.Element | null {
               nextTriggerTime={time}
               setHasWon={setHasWon}
               setIsCorrect={setIsCorrect}
+              showStats={showStats}
+              setShowStats={setShowStats}
             />
           )}
           {lives === 0 && hasWon === null && (

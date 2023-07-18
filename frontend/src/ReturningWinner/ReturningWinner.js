@@ -57,6 +57,8 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, sh
                                 <h4>{playerStats.max_streak}</h4>
                             </div>
                         </div>
+                        {/* <h2 style={{ marginBottom: "-20px", cursor: "default" }}>You got it {playerStats.guesses_today === 0 ? <span style={{ color: "green" }}>first try!</span> : <span>in <span style={{ color: "green" }}>{playerStats.guesses_today}</span> guesses!</span>}</h2> */}
+                        <br />
                         <br />
                         <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
                             <CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />
@@ -65,7 +67,12 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, sh
                 </Modal>
             </div>
             <div className="guess-container">
-                <h2 style={{ marginBottom: "-20px", cursor: "default" }}>You got it {playerStats.guesses_today === 0 ? <span style={{ color: "green" }}>first try you book worm</span> : <span>in <span style={{ color: "green" }}>{playerStats.guesses_today}</span> guesses</span>}!</h2>
+                {playerStats.guesses_today === 0 || playerStats.guesses_today > 1 && (
+                    <h2 style={{ marginBottom: "-20px", cursor: "default" }}>You got it {playerStats.guesses_today === 0 ? <span style={{ color: "green" }}>first try!</span> : <span>in <span style={{ color: "green" }}>{playerStats.guesses_today}</span> guesses!</span>}</h2>
+                )}
+                {playerStats.guesses_today === 1 && (
+                    <h2 style={{ marginBottom: "-20px", cursor: "default" }}>You got it in <span style={{ color: "green" }}>{playerStats.guesses_today}</span> guess!</h2>
+                )}
                 <h2 style={{ cursor: "default" }}>
                     The correct answer was{" "}
                     <span style={{ color: "green", cursor: "default" }}>{oneBook?.title}</span> by{" "}
