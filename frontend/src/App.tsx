@@ -32,13 +32,34 @@ function App(): JSX.Element | null {
   const [isHintTwoVisible, setIsHintTwoVisible] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   useEffect(() => {
-    if (lastMessage !== null) {
-      const { book, nextUpdateTime } = JSON.parse(lastMessage.data);
-      if (book) setOneBook(book);
-      if (nextUpdateTime) {
-        setTime(nextUpdateTime);
-      }
+    if (
+      localStorage.getItem("timeLeft") &&
+      new Date().toISOString() >= localStorage.getItem("timeLeft")
+    ) {
+      const playerStats = JSON.parse(localStorage.getItem("player_stats"));
+      playerStats.guesses_today = 0;
+      localStorage.setItem("hasWon", "has not played");
+      localStorage.setItem("player_stats", JSON.stringify(playerStats));
+      localStorage.setItem("lives", "5");
+      localStorage.setItem("hint", "0");
+      localStorage.removeItem("timeLeft");
+      setHasWon(null);
+      setIsCorrect(false);
     }
+    const getMessage = async () => {
+      if (lastMessage !== null) {
+        const { book, nextUpdateTime } = await JSON.parse(lastMessage.data);
+        if (book) {
+          setOneBook(book);
+        }
+        if (nextUpdateTime) {
+          if (!localStorage.getItem("timeLeft"))
+            localStorage.setItem("timeLeft", nextUpdateTime.toString());
+          setTime(nextUpdateTime);
+        }
+      }
+    };
+    getMessage();
   }, [lastMessage]);
   useEffect(() => {
     const localStorageWinStatus = localStorage.getItem("hasWon");
