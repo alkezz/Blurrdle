@@ -4,9 +4,11 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import CountdownTimer from "../CountdownTimer/CountdownTimer.tsx"
 import Paper from "@mui/material/Paper"
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 const ReturningLoser = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, setShowStats, showStats }) => {
     const playerStats = JSON.parse(localStorage.getItem("player_stats"));
+    const titleLink = oneBook.title.split(" ").join("_")
     const [winPercent, setWinPercent] = useState(0);
     const handleModal = () => (showStats ? setShowStats(false) : setShowStats(true));
     useEffect(() => {
@@ -122,7 +124,9 @@ const ReturningLoser = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, set
                         </div>
                     </div>
                 </div>
-                <p style={{ width: "50%", cursor: "default" }}>{oneBook?.description}</p>
+                <a rel="noreferrer" target='_blank' href={`https://en.wikipedia.org/wiki/${titleLink}`}>
+                    <h3 style={{ width: "850px", cursor: "pointer" }}>{oneBook?.description} <OpenInNewIcon style={{ marginTop: "10px" }} /></h3>
+                </a>
             </div>
         </>
     )
