@@ -294,6 +294,13 @@ function App(): JSX.Element | null {
             />
           </Tooltip>
         </h1>
+        {hasWon === null && (
+          <CountdownTimer
+            nextTriggerTime={time}
+            setHasWon={setHasWon}
+            setIsCorrect={setIsCorrect}
+          />
+        )}
         <div className="full-page-container">
           {lives > 0 &&
             !isCorrect &&
@@ -328,6 +335,8 @@ function App(): JSX.Element | null {
               nextTriggerTime={time}
               setHasWon={setHasWon}
               setIsCorrect={setIsCorrect}
+              showStats={showStats}
+              setShowStats={setShowStats}
             />
           )}
           {hasWon && (
@@ -346,16 +355,11 @@ function App(): JSX.Element | null {
               nextTriggerTime={time}
               setHasWon={setHasWon}
               setIsCorrect={setIsCorrect}
+              showStats={showStats}
+              setShowStats={setShowStats}
             />
           )}
         </div>
-        {hasWon === null && (
-          <CountdownTimer
-            nextTriggerTime={time}
-            setHasWon={setHasWon}
-            setIsCorrect={setIsCorrect}
-          />
-        )}
       </div>
     </>
   );
