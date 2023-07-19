@@ -84,15 +84,14 @@ const MainPage = ({ isSelected, setIsSelected, inputValue, setInputValue, oneBoo
                     {(showHint >= 2 || Number(localStorage.getItem("hint")) >= 2) && (
                         <div className="right-hint-top">
                             <Paper sx={{ backgroundColor: "#32354F", color: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", paddingLeft: "10px", paddingRight: "10px" }} elevation={8}>
-                                {oneBook?.hint_2} It was released in{" "}
-                                {oneBook?.release_year}
+                                {oneBook?.hint_2.split("")[oneBook?.hint_2.split("").length - 1] === "." ? `${oneBook?.hint_2} It was released in ${oneBook?.release_year}.` : `${oneBook?.hint_2}. It was released in ${oneBook?.release_year}.`}
                             </Paper>
                         </div>
                     )}
                     {(showHint >= 4 || Number(localStorage.getItem("hint")) >= 4) && (
                         <div className="right-hint-bottom">
                             <Paper sx={{ backgroundColor: "#32354F", color: "white", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }} elevation={8}>
-                                It was written by {oneBook?.author}
+                                It was written by {oneBook?.author}.
                             </Paper>
                         </div>
                     )}
