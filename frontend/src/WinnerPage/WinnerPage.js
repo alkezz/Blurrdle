@@ -85,12 +85,14 @@ const WinnerPage = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, setShow
                     width={windowDimension.width}
                     height={windowDimension.height}
                 />
-                <h2 style={{ cursor: "default" }}>You got it!</h2>
-                <h2 style={{ cursor: "default" }}>
-                    The correct answer was{" "}
-                    <span style={{ color: "green", cursor: "default" }}>{oneBook?.title}</span> by{" "}
-                    {oneBook?.author}!
-                </h2>
+                <div>
+                    <h2 style={{ cursor: "default" }}>You got it!</h2>
+                    <h2 style={{ cursor: "default" }}>
+                        The correct answer was{" "}
+                        <span style={{ color: "green", cursor: "default" }}>{oneBook?.title}</span> by{" "}
+                        {oneBook?.author}!
+                    </h2>
+                </div>
                 {<CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />}
                 <div style={{ display: "flex" }}>
                     <div
@@ -139,7 +141,7 @@ const WinnerPage = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, setShow
                         </div>
                     </div>
                 </div>
-                <h3 style={{ width: "50%", cursor: "default" }}>{oneBook?.description}</h3>
+                <h3 style={{ width: "850px", cursor: "default" }}>{oneBook?.description}</h3>
             </div>
         </>
     )

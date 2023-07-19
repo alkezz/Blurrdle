@@ -4,11 +4,14 @@ import Modal from "@mui/material/Modal";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Paper from "@mui/material/Paper"
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import "./ReturningWinner.css"
 
 const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, showStats, setShowStats }) => {
-    const playerStats = JSON.parse(localStorage.getItem("player_stats"));
     const [winPercent, setWinPercent] = useState(0)
+    const titleLink = oneBook.title.split(" ").join("_")
+    console.log("titleLink", titleLink)
+    const playerStats = JSON.parse(localStorage.getItem("player_stats"));
     const handleModal = () => (showStats ? setShowStats(false) : setShowStats(true));
     useEffect(() => {
         //setTimeout is used so every .50s it'll increase by 1
@@ -66,6 +69,7 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, sh
                     </div>
                 </Modal>
             </div>
+            {<CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />}
             <div className="guess-container">
                 {playerStats.guesses_today === 0 || playerStats.guesses_today > 1 && (
                     <h2 style={{ marginBottom: "-20px", cursor: "default" }}>You got it {playerStats.guesses_today === 0 ? <span style={{ color: "green" }}>first try!</span> : <span>in <span style={{ color: "green" }}>{playerStats.guesses_today}</span> guesses!</span>}</h2>
@@ -79,7 +83,6 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, sh
                     {oneBook?.author}!
                     <br />
                 </h2>
-                {<CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />}
                 <br />
                 <div style={{ display: "flex" }}>
                     <div
@@ -128,7 +131,9 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, sh
                         </div>
                     </div>
                 </div>
-                <h3 style={{ width: "50%", cursor: "default" }}>{oneBook?.description}</h3>
+                <a target='_blank' href={`https://en.wikipedia.org/wiki/${titleLink}`}>
+                    <h3 style={{ width: "850px", cursor: "pointer" }}>{oneBook?.description} <OpenInNewIcon style={{ marginTop: "10px" }} /></h3>
+                </a>
             </div >
         </>
     )
