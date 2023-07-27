@@ -69,6 +69,17 @@ function App(): JSX.Element | null {
     getMessage();
   }, [lastMessage]);
   useEffect(() => {
+    //setTimeout is used so every .50s it'll increase by 1
+    setTimeout(() => {
+      if (
+        winPercent <
+        Math.floor((playerStats.wins / playerStats.games_played) * 100)
+      ) {
+        setWinPercent(winPercent + 1);
+      }
+    }, 10);
+  }, [winPercent, playerStats.wins, playerStats.games_played]);
+  useEffect(() => {
     const localStorageWinStatus = localStorage.getItem("hasWon");
     if (localStorageWinStatus === "true") {
       setHasWon(true);
