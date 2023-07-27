@@ -67,8 +67,9 @@ const ReturningLoser = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, set
                     </div>
                 </Modal>
             </div>
+            {<CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />}
             <div className="guess-container">
-                <h2 style={{ cursor: "default" }}>
+                <h2 style={{ marginBottom: "-20px", cursor: "default" }}>
                     You didn't get the answer today
                     <br />
                 </h2>
@@ -77,7 +78,6 @@ const ReturningLoser = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, set
                     <span style={{ color: "red", cursor: "default" }}>{oneBook?.title}</span> by{" "}
                     {oneBook?.author}
                 </h2>
-                <CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />
                 <div style={{ display: "flex" }}>
                     <div
                         style={{
@@ -125,7 +125,7 @@ const ReturningLoser = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, set
                     </div>
                 </div>
                 <a rel="noreferrer" target='_blank' href={`https://en.wikipedia.org/wiki/${titleLink}`}>
-                    <h3 style={{ width: "850px", cursor: "pointer" }}>{oneBook?.description} <OpenInNewIcon style={{ marginTop: "10px" }} /></h3>
+                    <h3 style={{ width: "850px", cursor: "pointer" }}>{oneBook?.description}<OpenInNewIcon style={{ marginBottom: "-3px", fontSize: "20px" }} /></h3>
                 </a>
             </div>
         </>

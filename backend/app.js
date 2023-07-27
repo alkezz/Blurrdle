@@ -68,38 +68,6 @@ s3.getObject({ Bucket: process.env.AWS_BUCKET_NAME, Key: 'bookData.json' }, (err
         );
     }
 });
-wss.on('connection', (socket) => {
-    socket.on('message', (message) => {
-        try {
-            const data = JSON.parse(message);
-            const { type, playerId, attempts, time, firstTry } = data;
-
-            if (type === 'updateScore') {
-                // Update the player's score in the dictionary
-                if (!scores[playerId]) {
-                    scores[playerId] = {
-                        bestGuess: attempts,
-                        bestTime: time,
-                        firstTry: 0
-                    }
-                } else {
-                    scores[playerId] = {
-                        bestGuess: attempts > 0 && attempts > this.bestGuess ? attempts : this.bestGuess,
-                        bestTime: best_time > this.best_time ? best_time : this.best_time,
-                        firstTry: firstTry ? this.firstTry++ : this.firstTry
-                    }
-                }
-
-                // Send the updated score only to the corresponding client
-                socket.send(JSON.stringify({ type: 'score', scores: scores[playerId] }));
-                console.log(scores[playerId], "SCORES")
-            }
-
-        } catch (error) {
-            console.error('Error parsing message:', error);
-        }
-    })
-})
 const cronJob = new CronJob('0 0 * * *', () => {
     console.log("IN CRON")
     // Read JSON file from S3

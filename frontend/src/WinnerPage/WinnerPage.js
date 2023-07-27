@@ -95,7 +95,6 @@ const WinnerPage = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, setShow
                         {oneBook?.author}!
                     </h2>
                 </div>
-                {<CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />}
                 <div style={{ display: "flex" }}>
                     <div
                         style={{
@@ -143,7 +142,7 @@ const WinnerPage = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, setShow
                     </div>
                 </div>
                 <a rel="noreferrer" target='_blank' href={`https://en.wikipedia.org/wiki/${titleLink}`}>
-                    <h3 style={{ width: "850px", cursor: "pointer" }}>{oneBook?.description} <OpenInNewIcon style={{ marginTop: "10px" }} /></h3>
+                    <h3 style={{ width: "850px", cursor: "pointer" }}>{oneBook?.description}<OpenInNewIcon style={{ marginBottom: "-3px", fontSize: "20px" }} /></h3>
                 </a>
             </div>
         </>

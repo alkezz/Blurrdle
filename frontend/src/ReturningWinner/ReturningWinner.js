@@ -10,7 +10,6 @@ import "./ReturningWinner.css"
 const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, showStats, setShowStats }) => {
     const [winPercent, setWinPercent] = useState(0)
     const titleLink = oneBook.title.split(" ").join("_")
-    console.log("titleLink ", oneBook?.hint_2.split(""))
     const playerStats = JSON.parse(localStorage.getItem("player_stats"));
     const handleModal = () => (showStats ? setShowStats(false) : setShowStats(true));
     useEffect(() => {
@@ -131,7 +130,7 @@ const ReturningWinner = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, sh
                     </div>
                 </div>
                 <a rel="noreferrer" target='_blank' href={`https://en.wikipedia.org/wiki/${titleLink}`}>
-                    <h3 style={{ width: "850px", cursor: "pointer" }}>{oneBook?.description} <OpenInNewIcon style={{ marginTop: "10px" }} /></h3>
+                    <h3 style={{ width: "850px", cursor: "pointer" }}>{oneBook?.description}<OpenInNewIcon style={{ marginBottom: "-3px", fontSize: "20px" }} /></h3>
                 </a>
             </div >
         </>
