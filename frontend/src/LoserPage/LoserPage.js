@@ -12,6 +12,9 @@ const LoserPage = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, showStat
     const [winPercent, setWinPercent] = useState(0)
     const handleModal = () => (showStats ? setShowStats(false) : setShowStats(true));
     useEffect(() => {
+        setShowStats(true);
+    }, [])
+    useEffect(() => {
         //setTimeout is used so every .50s it'll increase by 1
         setTimeout(() => {
             if (winPercent < Math.floor((playerStats.wins / playerStats.games_played) * 100)) {

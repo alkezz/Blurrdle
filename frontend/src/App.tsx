@@ -13,11 +13,14 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import Grow from "@mui/material/Grow";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 import useWebSocket from "react-use-websocket";
 import { v4 as uuidv4 } from "uuid";
 import "./App.css";
 
 function App(): JSX.Element | null {
+  const playerStats = JSON.parse(localStorage.getItem("player_stats"));
   const { lastMessage } = useWebSocket("wss://blurrdle-backend.onrender.com");
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
   const [oneBook, setOneBook] = useState<object>({});
@@ -33,7 +36,8 @@ function App(): JSX.Element | null {
   const [isHintOneVisible, setIsHintOneVisible] = useState<boolean>(false);
   const [isHintTwoVisible, setIsHintTwoVisible] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [showStats, setShowStats] = useState<boolean>(true);
+  const [showStats, setShowStats] = useState<boolean>(false);
+  const [winPercent, setWinPercent] = useState(0);
   useEffect(() => {
     if (
       localStorage.getItem("timeLeft") &&
@@ -101,6 +105,8 @@ function App(): JSX.Element | null {
     }
   }, [localStorage.getItem("hint"), setShowHint]);
   const handleModal = (): void => (open ? setOpen(false) : setOpen(true));
+  const handleStatsModal = (): void =>
+    showStats ? setShowStats(false) : setShowStats(true);
   const handleWin = (): void => {
     setIsCorrect(true);
     localStorage.setItem("hasWon", "true");
@@ -180,101 +186,169 @@ function App(): JSX.Element | null {
   if (!time) return null;
   return (
     <>
-      <div className="modal-container">
-        <Modal
-          open={open}
-          onClose={handleModal}
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            height: "fit-content",
-          }}
-        >
-          <Grow in={open}>
+      {open && (
+        <div className="modal-container">
+          <Modal
+            open={open}
+            onClose={handleModal}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              height: "fit-content",
+            }}
+          >
+            <Grow in={open}>
+              <div className="modal-content">
+                <p>👋 Hello and welcome to Blurrdle!</p>
+                <p>
+                  Blurrdle is a mash-up between the beloved game "Wordle" and
+                  all the other "dle" games like{" "}
+                  <a
+                    rel="noreferrer"
+                    href="https://globle-game.com/"
+                    target="_blank"
+                  >
+                    Globle
+                  </a>
+                  ,{" "}
+                  <a
+                    rel="noreferrer"
+                    href="https://oec.world/en/tradle/"
+                    target="_blank"
+                  >
+                    Tradle
+                  </a>
+                  , and{" "}
+                  <a
+                    rel="noreferrer"
+                    href="https://www.gamedle.wtf/#"
+                    target="_blank"
+                  >
+                    Gamedle
+                  </a>{" "}
+                  but based on books!
+                </p>
+                <p>
+                  The objective is to guess the book based on clues and a blurry
+                  image of the cover.
+                </p>
+                <h3 style={{ marginBottom: "-10px" }}>How to play:</h3>
+                <ol>
+                  <li>
+                    You have 5 lives, every time you guess a book title wrong
+                    you lose a life
+                  </li>
+                  {/* <li>You are given a blurry image of the book cover at first</li> */}
+                  <li>
+                    After each wrong guess a hint will appear. You will get 4
+                    hints including the book author
+                  </li>
+                </ol>
+                Keep going until you either lose all of your lives or you get
+                the book right. Good luck!
+                <div>
+                  <br />
+                  <Tooltip title="Github" arrow>
+                    <a
+                      rel="noreferrer"
+                      href="https://www.github.com/alkezz"
+                      target="_blank"
+                    >
+                      <GitHubIcon sx={{ fontSize: "28px" }} />
+                    </a>
+                  </Tooltip>
+                  &nbsp; &nbsp; &nbsp;
+                  <Tooltip title="LinkedIn" arrow>
+                    <a
+                      rel="noreferrer"
+                      href="https://www.linkedin.com/in/ali-k-ezzeddine"
+                      target="_blank"
+                    >
+                      <LinkedInIcon sx={{ fontSize: "28px" }} />
+                    </a>
+                  </Tooltip>
+                  &nbsp; &nbsp; &nbsp;
+                  <Tooltip title="Portfolio" arrow>
+                    <a
+                      rel="noreferrer"
+                      href="https://www.ali-ezzeddine.com"
+                      target="_blank"
+                    >
+                      <NewReleasesIcon sx={{ fontSize: "28px" }} />
+                    </a>
+                  </Tooltip>
+                </div>
+              </div>
+            </Grow>
+          </Modal>
+        </div>
+      )}
+      {showStats && (
+        <div className="modal-container">
+          <Modal
+            open={showStats}
+            onClose={handleStatsModal}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              height: "fit-content",
+            }}
+          >
             <div className="modal-content">
-              <p>👋 Hello and welcome to Blurrdle!</p>
-              <p>
-                Blurrdle is a mash-up between the beloved game "Wordle" and all
-                the other "dle" games like{" "}
-                <a
-                  rel="noreferrer"
-                  href="https://globle-game.com/"
-                  target="_blank"
-                >
-                  Globle
-                </a>
-                ,{" "}
-                <a
-                  rel="noreferrer"
-                  href="https://oec.world/en/tradle/"
-                  target="_blank"
-                >
-                  Tradle
-                </a>
-                , and{" "}
-                <a
-                  rel="noreferrer"
-                  href="https://www.gamedle.wtf/#"
-                  target="_blank"
-                >
-                  Gamedle
-                </a>{" "}
-                but based on books!
-              </p>
-              <p>
-                The objective is to guess the book based on clues and a blurry
-                image of the cover.
-              </p>
-              <h3 style={{ marginBottom: "-10px" }}>How to play:</h3>
-              <ol>
-                <li>
-                  You have 5 lives, every time you guess a book title wrong you
-                  lose a life
-                </li>
-                {/* <li>You are given a blurry image of the book cover at first</li> */}
-                <li>
-                  After each wrong guess a hint will appear. You will get 4
-                  hints including the book author
-                </li>
-              </ol>
-              Keep going until you either lose all of your lives or you get the
-              book right. Good luck!
-              <div>
-                <br />
-                <Tooltip title="Github" arrow>
-                  <a
-                    rel="noreferrer"
-                    href="https://www.github.com/alkezz"
-                    target="_blank"
-                  >
-                    <GitHubIcon sx={{ fontSize: "28px" }} />
-                  </a>
-                </Tooltip>
-                &nbsp; &nbsp; &nbsp;
-                <Tooltip title="LinkedIn" arrow>
-                  <a
-                    rel="noreferrer"
-                    href="https://www.linkedin.com/in/ali-k-ezzeddine"
-                    target="_blank"
-                  >
-                    <LinkedInIcon sx={{ fontSize: "28px" }} />
-                  </a>
-                </Tooltip>
-                &nbsp; &nbsp; &nbsp;
-                <Tooltip title="Portfolio" arrow>
-                  <a
-                    rel="noreferrer"
-                    href="https://www.ali-ezzeddine.com"
-                    target="_blank"
-                  >
-                    <NewReleasesIcon sx={{ fontSize: "28px" }} />
-                  </a>
-                </Tooltip>
+              <h1>Statistics</h1>
+              <div className="raw-stats">
+                <div className="stat-headers">
+                  <h3>Games Played:</h3>
+                  <h3>Perfect Games:</h3>
+                  <h3>Win %:</h3>
+                  <h3>Current Streak:</h3>
+                  <h3>Max Streak:</h3>
+                </div>
+                <div className="stat-numbers">
+                  <h4 style={{ marginBottom: "15px" }}>
+                    {playerStats.games_played}
+                  </h4>
+                  <h4>{playerStats.perfect_guesses}</h4>
+                  {/* <h4>{(playerStats.wins / playerStats.games_played) * 100}%</h4> */}
+                  <CircularProgressbar
+                    className="circle-progress"
+                    styles={{
+                      path: { stroke: "white" }, //Changing path color
+                      trail: {
+                        // Trail color
+                        stroke: "#1e2030",
+                        // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+                      },
+                      text: { fill: "white", fontSize: "30px" }, //Changing text color
+                    }}
+                    strokeWidth={6}
+                    text={`${winPercent}%`}
+                    value={winPercent}
+                  />
+                  <h4>{playerStats.win_streak}</h4>
+                  <h4>{playerStats.max_streak}</h4>
+                </div>
+              </div>
+              {/* <h2 style={{ marginBottom: "-20px", cursor: "default" }}>You got it {playerStats.guesses_today === 0 ? <span style={{ color: "green" }}>first try!</span> : <span>in <span style={{ color: "green" }}>{playerStats.guesses_today}</span> guesses!</span>}</h2> */}
+              <br />
+              <br />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <CountdownTimer
+                  nextTriggerTime={time}
+                  setHasWon={setHasWon}
+                  setIsCorrect={setIsCorrect}
+                />
               </div>
             </div>
-          </Grow>
-        </Modal>
-      </div>
+          </Modal>
+        </div>
+      )}
       <div className="abc">
         <h1 style={{ cursor: "default" }}>
           Welcome to Blurrdle! &nbsp;
@@ -288,7 +362,9 @@ function App(): JSX.Element | null {
           &nbsp;
           <Tooltip title="Stats">
             <LeaderboardIcon
-              onClick={(e) => setShowStats(true)}
+              onClick={(e) =>
+                showStats ? setShowStats(false) : setShowStats(true)
+              }
               sx={{ cursor: "pointer" }}
               className="info-icon"
             />
