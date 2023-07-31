@@ -5,6 +5,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Confetti from "react-confetti";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper"
 
 const WinnerPage = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, setShowStats, showStats }) => {
@@ -47,42 +48,44 @@ const WinnerPage = ({ oneBook, nextTriggerTime, setHasWon, setIsCorrect, setShow
                     onClose={handleModal}
                     style={{ display: "flex", justifyContent: "center", height: "fit-content" }}
                 >
-                    <div className='modal-content'>
-                        <h1>Statistics</h1>
-                        <div className='raw-stats'>
-                            <div className='stat-headers'>
-                                <h3>Games Played:</h3>
-                                <h3>Perfect Games:</h3>
-                                <h3>Win %:</h3>
-                                <h3>Current Streak:</h3>
-                                <h3>Max Streak:</h3>
+                    <Grow in={showStats}>
+                        <div className='modal-content'>
+                            <h1>Statistics</h1>
+                            <div className='raw-stats'>
+                                <div className='stat-headers'>
+                                    <h3>Games Played:</h3>
+                                    <h3>Perfect Games:</h3>
+                                    <h3>Win %:</h3>
+                                    <h3>Current Streak:</h3>
+                                    <h3>Max Streak:</h3>
+                                </div>
+                                <div className='stat-numbers'>
+                                    <h4 style={{ marginBottom: "15px" }}>{playerStats.games_played}</h4>
+                                    <h4>{playerStats.perfect_guesses}</h4>
+                                    {/* <h4>{(playerStats.wins / playerStats.games_played) * 100}%</h4> */}
+                                    <CircularProgressbar
+                                        className='circle-progress'
+                                        styles={{
+                                            path: { stroke: "white" }, //Changing path color
+                                            trail: {
+                                                // Trail color
+                                                stroke: '#1e2030',
+                                                // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+                                            },
+                                            text: { fill: "white", fontSize: "30px" } //Changing text color
+                                        }} strokeWidth={6}
+                                        text={`${winPercent}%`}
+                                        value={winPercent} />
+                                    <h4>{playerStats.win_streak}</h4>
+                                    <h4>{playerStats.max_streak}</h4>
+                                </div>
                             </div>
-                            <div className='stat-numbers'>
-                                <h4 style={{ marginBottom: "15px" }}>{playerStats.games_played}</h4>
-                                <h4>{playerStats.perfect_guesses}</h4>
-                                {/* <h4>{(playerStats.wins / playerStats.games_played) * 100}%</h4> */}
-                                <CircularProgressbar
-                                    className='circle-progress'
-                                    styles={{
-                                        path: { stroke: "white" }, //Changing path color
-                                        trail: {
-                                            // Trail color
-                                            stroke: '#1e2030',
-                                            // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
-                                        },
-                                        text: { fill: "white", fontSize: "30px" } //Changing text color
-                                    }} strokeWidth={6}
-                                    text={`${winPercent}%`}
-                                    value={winPercent} />
-                                <h4>{playerStats.win_streak}</h4>
-                                <h4>{playerStats.max_streak}</h4>
+                            <br />
+                            <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                                <CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />
                             </div>
                         </div>
-                        <br />
-                        <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                            <CountdownTimer nextTriggerTime={nextTriggerTime} setHasWon={setHasWon} setIsCorrect={setIsCorrect} />
-                        </div>
-                    </div>
+                    </Grow>
                 </Modal>
             </div>
             <div className="guess-container">

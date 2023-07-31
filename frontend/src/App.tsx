@@ -73,12 +73,12 @@ function App(): JSX.Element | null {
     setTimeout(() => {
       if (
         winPercent <
-        Math.floor((playerStats.wins / playerStats.games_played) * 100)
+        Math.floor((playerStats?.wins / playerStats?.games_played) * 100)
       ) {
         setWinPercent(winPercent + 1);
       }
     }, 10);
-  }, [winPercent, playerStats.wins, playerStats.games_played]);
+  }, [winPercent, playerStats?.wins, playerStats?.games_played]);
   useEffect(() => {
     const localStorageWinStatus = localStorage.getItem("hasWon");
     if (localStorageWinStatus === "true") {
@@ -98,6 +98,7 @@ function App(): JSX.Element | null {
         wins: 0,
         win_streak: 0,
         max_streak: 0,
+        won_today: null,
       };
       const pastGames = [];
       localStorage.setItem("player_stats", JSON.stringify(playerStats));
@@ -126,6 +127,7 @@ function App(): JSX.Element | null {
     const pastGames = JSON.parse(localStorage.getItem("past_games"));
     playerStats.wins += 1;
     playerStats.win_streak += 1;
+    playerStats.won_today = true;
     if (playerStats.win_streak > playerStats.max_streak)
       playerStats.max_streak = playerStats.win_streak;
     if (guesses === 0) {
@@ -144,11 +146,15 @@ function App(): JSX.Element | null {
   const handleLoss = (): void => {
     localStorage.setItem("hasWon", "false");
     const playerStats = JSON.parse(localStorage.getItem("player_stats"));
+    const pastGames = JSON.parse(localStorage.getItem("past_games"));
     playerStats.win_streak = 0;
+    playerStats.won_today = false;
     playerStats.guesses += 5;
     playerStats.guesses_today = 5;
     playerStats.games_played += 1;
+    pastGames.push(playerStats);
     localStorage.setItem("player_stats", JSON.stringify(playerStats));
+    localStorage.setItem("past_games", JSON.stringify(pastGames));
   };
   const handleSubmit = (): void => {
     if (isError) setIsError(false);
@@ -305,58 +311,60 @@ function App(): JSX.Element | null {
               height: "fit-content",
             }}
           >
-            <div className="modal-content">
-              <h1>Statistics</h1>
-              <div className="raw-stats">
-                <div className="stat-headers">
-                  <h3>Games Played:</h3>
-                  <h3>Perfect Games:</h3>
-                  <h3>Win %:</h3>
-                  <h3>Current Streak:</h3>
-                  <h3>Max Streak:</h3>
+            <Grow in={showStats}>
+              <div className="modal-content">
+                <h1>Statistics</h1>
+                <div className="raw-stats">
+                  <div className="stat-headers">
+                    <h3>Games Played:</h3>
+                    <h3>Perfect Games:</h3>
+                    <h3>Win %:</h3>
+                    <h3>Current Streak:</h3>
+                    <h3>Max Streak:</h3>
+                  </div>
+                  <div className="stat-numbers">
+                    <h4 style={{ marginBottom: "15px" }}>
+                      {playerStats.games_played}
+                    </h4>
+                    <h4>{playerStats.perfect_guesses}</h4>
+                    {/* <h4>{(playerStats.wins / playerStats.games_played) * 100}%</h4> */}
+                    <CircularProgressbar
+                      className="circle-progress"
+                      styles={{
+                        path: { stroke: "white" }, //Changing path color
+                        trail: {
+                          // Trail color
+                          stroke: "#1e2030",
+                          // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
+                        },
+                        text: { fill: "white", fontSize: "30px" }, //Changing text color
+                      }}
+                      strokeWidth={6}
+                      text={`${winPercent}%`}
+                      value={winPercent}
+                    />
+                    <h4>{playerStats.win_streak}</h4>
+                    <h4>{playerStats.max_streak}</h4>
+                  </div>
                 </div>
-                <div className="stat-numbers">
-                  <h4 style={{ marginBottom: "15px" }}>
-                    {playerStats.games_played}
-                  </h4>
-                  <h4>{playerStats.perfect_guesses}</h4>
-                  {/* <h4>{(playerStats.wins / playerStats.games_played) * 100}%</h4> */}
-                  <CircularProgressbar
-                    className="circle-progress"
-                    styles={{
-                      path: { stroke: "white" }, //Changing path color
-                      trail: {
-                        // Trail color
-                        stroke: "#1e2030",
-                        // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
-                      },
-                      text: { fill: "white", fontSize: "30px" }, //Changing text color
-                    }}
-                    strokeWidth={6}
-                    text={`${winPercent}%`}
-                    value={winPercent}
+                {/* <h2 style={{ marginBottom: "-20px", cursor: "default" }}>You got it {playerStats.guesses_today === 0 ? <span style={{ color: "green" }}>first try!</span> : <span>in <span style={{ color: "green" }}>{playerStats.guesses_today}</span> guesses!</span>}</h2> */}
+                {/* <br />
+                <br />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
+                >
+                  <CountdownTimer
+                    nextTriggerTime={time}
+                    setHasWon={setHasWon}
+                    setIsCorrect={setIsCorrect}
                   />
-                  <h4>{playerStats.win_streak}</h4>
-                  <h4>{playerStats.max_streak}</h4>
-                </div>
+                </div> */}
               </div>
-              {/* <h2 style={{ marginBottom: "-20px", cursor: "default" }}>You got it {playerStats.guesses_today === 0 ? <span style={{ color: "green" }}>first try!</span> : <span>in <span style={{ color: "green" }}>{playerStats.guesses_today}</span> guesses!</span>}</h2> */}
-              <br />
-              <br />
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "100%",
-                }}
-              >
-                <CountdownTimer
-                  nextTriggerTime={time}
-                  setHasWon={setHasWon}
-                  setIsCorrect={setIsCorrect}
-                />
-              </div>
-            </div>
+            </Grow>
           </Modal>
         </div>
       )}
